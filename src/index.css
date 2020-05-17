@@ -1,0 +1,29 @@
+html{
+    margin: 0;
+    padding: 0;
+}
+main{
+    min-height: 100vh;
+}
+#forestImg {
+    background-image: url("/images/runningInForest.jpg");
+    background-size: 100vw;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    width: 100%;
+    height: 80vh;
+    opacity: .9;
+}
+
+.gradient-text {
+    display: inline;
+    background-color: #f3ec78;
+    background-image: conic-gradient(#f3ec78, #db8e2f);
+    background-image: linear-gradient(45deg, #f3ec78, #af4261);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent;
+}
