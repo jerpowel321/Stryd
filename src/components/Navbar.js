@@ -90,7 +90,10 @@ export default function TemporaryDrawer() {
                     <Grid align="center" item xs={4}>
                         <Typography variant="h5" className="gradient-text">STRYD</Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item align="right" xs={4}>
+                        <Button className={classes.button}>Learn More</Button>
+                        <Button className={classes.button}>Blog</Button>
+                        <Button className={classes.button}>Contact</Button>
                     </Grid>
                 </Grid>
             </Toolbar>
