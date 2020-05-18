@@ -21,17 +21,18 @@ const useStyles = makeStyles({
   p: {
     display: "inline",
     fontSize: "20px",
-    padding: "0px 10px 0px 0px"
+    padding: "0px 20px 0px 0px"
   },
   select: {
     fontSize: "16px",
-    padding: "20px",
-    width: "150px",
     height: "40px",
-    outline: accent
+    border: `3px solid ${accent}`,
+    outline: "none"
+    
   },
   option: {
-    width: 250,
+    
+
   },
 
 });
