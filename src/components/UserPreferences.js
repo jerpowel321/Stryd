@@ -39,12 +39,24 @@ const useStyles = makeStyles({
 
 const UserPreferences = props => {
   const classes = useStyles();
-  const [unitPref, setUnitPref] = useState("Kilometers");
-  const [durationPref, setDurationPref] = useState("Moving");
+  const [unitPref, setUnitPref] = useState("Miles");
+  const [durationPref, setDurationPref] = useState("Elapsed");
   const [lapTableViewPref, setLapTableViewPref] = useState("Manual Splits");
+
+
+  function handleChange(event) {
+    console.log("=======Child handle change")
+    console.log(event)
+    // Invoke the callback with the new value
+    props.onChange(event.target.value);
+  }
 
   return (
     <section className={classes.root}>
+      <p>{unitPref}</p>
+      <p>{durationPref}</p>
+      <p>{lapTableViewPref}</p>
+
       <h2 className={classes.h2}>User Settings</h2>
       <Box display="flex" flexWrap="wrap">
         <Box p={1} width={300} >
@@ -54,6 +66,7 @@ const UserPreferences = props => {
               id={"unit-selector"}
               onChange={event => {
                 setUnitPref(event.target.value);
+                handleChange(event)
               }}
               value={unitPref}
             >
@@ -68,6 +81,7 @@ const UserPreferences = props => {
               id={"duration-type-selector"}
               onChange={event => {
                 setDurationPref(event.target.value);
+                handleChange(event)
               }}
               value={durationPref}
             >
@@ -82,6 +96,7 @@ const UserPreferences = props => {
               id={"lap-table-type-selector"}
               onChange={event => {
                 setLapTableViewPref(event.target.value);
+                handleChange(event)
               }}
               value={lapTableViewPref}
             >

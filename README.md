@@ -197,5 +197,6 @@ See the create-react-app docs section about [deployment](https://facebook.github
 
 Questions
 
-1) Can I assume that the recording is pasued where there is more than a 1 second gap between the `timestamp_list` datapoints.
+1) Can I assume that the recording is pausued where there is more than a 1 second gap between the `timestamp_list` datapoints.
 2) Can I assume the amounts in `distance_list` are displayed in yards?
+3) Can I assume that 

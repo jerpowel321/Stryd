@@ -1,18 +1,10 @@
 import React from 'react';
-
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { FormControl, Select, MenuItem, Grid, FormControlLabel, } from '@material-ui/core';
 
 import { activityApi, userToken } from '../api'
+import { makeStyles } from '@material-ui/core/styles';
 
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#004159'
-    },
-  },
-});
 
 class Runsummary extends React.Component {
   constructor(props) {
@@ -20,28 +12,24 @@ class Runsummary extends React.Component {
     this.state = {
       runData: {},
       runTitle: "",
-      durationType: "",
+      durationPref: this.props.durationPref,
       duration: "",
-      distanceType: "miles",
+      unitPref: this.props.unitPref,
       distance: "",
       avgPace: 0,
       avgPower: 0,
-      dataLoaded: false
+      dataLoaded: false,
+      lapTableViewPref: this.props.lapTableViewPref
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  // buttonClick = (event) => {
-  //   let { name } = event.target;
-  //   this.setState({
-  //     [name]: !this.state[name],
-  //     updateChart: false,
-  //   }, () => {
-  //     this.showData(this.state.mergeData, this.state.selectedState)
-  //   });
-  // }
-
   componentDidMount() {
+    console.log("This is the props for run Summary")
+    console.log(this.props.durationPref)
+    console.log(this.props.unitPref)
+    console.log("=================================")
+
     console.log("Rum Summary did mount")
     fetch(activityApi, {
       method: "GET",
@@ -77,30 +65,37 @@ class Runsummary extends React.Component {
 
   findAvgPower(powerData) {
     let powerSum = 0;
+    let powerAvg;
     for (let i = 0; i < powerData.length; i++) {
-      powerSum += powerData[1]
+      if (powerData[1] > 0){
+        powerSum += powerData[1]
+      }
     }
-    let powerAvg = powerSum / powerData.length
-    console.log("This is the powerAvg in Watts ", powerAvg)
+      let seconds = this.getSeconds(this.state.duration)
+      powerAvg = (powerSum / seconds).toFixed(0)
+      console.log("this is the calculated power Avg ", powerAvg)
+    
     return powerAvg
   }
 
-
-  findAvgPace(speedData) {
-    console.log("this is the duration", this.state.duration)
-    console.log("this is the speed data ", speedData)
-    let speed;
-    let hms = this.state.duration;
+  getSeconds(hms){
     let a = hms.split(':');
     let seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+    return seconds
+  }
+
+  findAvgPace(speedData) {
+    let speed;
+    let seconds = this.getSeconds(this.state.duration)
     speed = ((seconds / 60) / this.state.distance)
-    speed = speed.toFixed(4)
-    hms = this.convertToHMS(speed * 60)
-    console.log(speed);
-    console.log(this.convertToHMS(speed * 60))
-    console.log("seconds ", seconds);
-    console.log(this.state.distance)
-    console.log(speed + " " + this.state.durationType + " minute per "+ this.state.distanceType )
+    speed = speed.toFixed(2)
+    let hms = this.convertToHMS(speed * 60)
+    console.log("this is the duration", this.state.duration)
+    console.log("this is the speed" , speed);
+    console.log("speed converted to hms ", this.convertToHMS(speed * 60))
+    console.log("This is the seconds ", seconds);
+    console.log("This is the distance ", this.state.distance)
+    console.log("This is how many minutes per " + this.state.unitPref + " : " + speed + " " + this.state.durationPref )
     console.log("this is the average pace ", hms)
     this.setState({
       avgPace: hms
@@ -111,7 +106,7 @@ class Runsummary extends React.Component {
   // Assuming distance is in yards
   findRunDistance(distance) {
     console.log(distance)
-    if (this.state.distanceType === "miles") {
+    if (this.state.unitPref === "Miles") {
       return this.convertToMiles(distance)
     }
     else {
@@ -141,7 +136,7 @@ class Runsummary extends React.Component {
     let startTime = timestamp[0];
     let endTime = timestamp[timestamp.length - 1]
     let diff = endTime - startTime
-    if (this.state.durationType === "elapsed") {
+    if (this.state.durationPref === "Elapsed") {
       duration = this.convertToHMS(diff)
       console.log("Elapsed Duration: ", duration)
     }
@@ -196,15 +191,17 @@ class Runsummary extends React.Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
         <div>
           {this.state.dataLoaded === true ? <div>
             <div className="container">
               <Grid container spacing={1}>
                 <h1 >Run Summary</h1>
                 <h2>Run Title {this.state.runTitle}</h2>
-                <h1>Run Distance {this.state.distance}{this.state.distanceType}</h1>
-                <h1>Average {this.state.durationType} Pace {this.state.avgPace} per {this.state.distanceType}</h1>
+                <h1>Run Distance {this.state.distance}{this.state.unitPref}</h1>
+                <h1>Average {this.state.durationPref} Pace {this.state.avgPace} per {this.state.unitPref}</h1>
+                <h1>This is the duration Preference{this.state.durationPref}</h1>
+                <h1>This is the unit Preference{this.state.unitPref}</h1>
+
               </Grid>
             </div>
           </div>
@@ -212,7 +209,6 @@ class Runsummary extends React.Component {
             null
           }
         </div>
-      </ThemeProvider >
     );
   }
 }
