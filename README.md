@@ -190,22 +190,15 @@ See the create-react-app docs section about [deployment](https://facebook.github
 - 
 
 
-## Credits
-- Images
-    - Photo by David Marcu on Unsplash
-
-
-Questions
-
-1) Can I assume that the recording is pausued where there is more than a 1 second gap between the `timestamp_list` datapoints.
-2) Can I assume the amounts in `distance_list` are displayed in yards?
 
 
 <a href="https://icons8.com/icon/33504/running">Running icon by Icons8</a>
 
 
 
-Credits
+## Credits
+- Images
+    - Photo by David Marcu on Unsplash
 
 - Icons
      - <a href="https://icons8.com/icon/42788/clock">Clock icon by Icons8</a>

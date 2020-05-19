@@ -8,7 +8,7 @@ import { Grid } from '@material-ui/core';
 
 const App = () => {
   const [value, setValue] = React.useState("");
-  const [unitPref, setUnitPref] = useState("Miles");
+  const [unitPref, setUnitPref] = useState("Kilometers");
   const [durationPref, setDurationPref] = useState("Elapsed");
   const [lapTableViewPref, setLapTableViewPref] = useState("Manual Splits");
   const [runData, setRunData] = useState({});

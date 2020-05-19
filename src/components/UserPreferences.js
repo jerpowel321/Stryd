@@ -66,7 +66,7 @@ const useStyles = makeStyles({
 
 const UserPreferences = props => {
   const classes = useStyles();
-  const [unitPref, setUnitPref] = useState("Miles");
+  const [unitPref, setUnitPref] = useState("Kilometers");
   const [durationPref, setDurationPref] = useState("Elapsed");
   const [lapTableViewPref, setLapTableViewPref] = useState("Manual Splits");
 

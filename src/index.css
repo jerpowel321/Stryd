@@ -3,7 +3,7 @@ html, main{
     padding: 0;
 }
 
-.hero {
+/* .hero {
     position: relative; 
     height: 50vh;
     width: 100%;
@@ -24,7 +24,7 @@ html, main{
       opacity: 0.75;
       z-index: -2000;
 }
-
+ */
 
 
 #trackImg{
