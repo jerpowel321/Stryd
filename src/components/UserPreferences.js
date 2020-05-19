@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   root: {
     display: "block",
     width: "380px",
-    margin: "auto",
+    // margin: "auto",
     border: "1px solid gainsboro",
     padding: "50px 30px",
     color: "white",
