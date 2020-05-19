@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-import { Typography, Box, Grid } from "@material-ui/core"
-import amber from '@material-ui/core/colors/amber';
+import { Grid } from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import SettingsIcon from '@material-ui/icons/Settings';
 import TimerIcon from '@material-ui/icons/Timer';
 import BarChartIcon from '@material-ui/icons/BarChart';
 
-const primary = '#000000';
-const accent = amber[800];
 
 const useStyles = makeStyles({
   root: {
     display: "block",
     width: "380px",
-    // margin: "auto",
     border: "1px solid gainsboro",
     padding: "50px 30px",
     color: "white",

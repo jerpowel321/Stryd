@@ -3,6 +3,7 @@ import UserPreferences from "./components/UserPreferences";
 import Navbar from "./components/Navbar";
 import RunSummary from "./components/RunSummary";
 import Footer from "./components/Footer";
+import LapsTable from "./components/LapsTable";
 import { Grid } from '@material-ui/core';
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [unitPref, setUnitPref] = useState("Miles");
   const [durationPref, setDurationPref] = useState("Elapsed");
   const [lapTableViewPref, setLapTableViewPref] = useState("Manual Splits");
+  const [runData, setRunData] = useState({});
+
 
   function handleChange(newValue) {
     console.log("======= Parent handle change")
@@ -24,27 +27,42 @@ const App = () => {
       setDurationPref(newValue);
       console.log(durationPref)
     }
-    else {
+    else if (newValue === "Manual Splits" || newValue === "Distance Splits") {
       setLapTableViewPref(newValue);
       console.log(lapTableViewPref)
     }
+    else {
+      setRunData(newValue);
+      console.log(runData)
+    }
   }
+
 
 
   return (
     <main>
       <Navbar />
-      <Grid container wrap="wrap"  style={{ marginTop: "20px" }}>
+      <Grid container wrap="wrap" style={{ marginTop: "20px" }}>
         <Grid item xs={4} style={{ marginTop: "20px" }}>
-          <UserPreferences value={value} onChange={handleChange} />
+          <UserPreferences
+            value={value}
+            onChange={handleChange}
+          />
         </Grid>
         <Grid item xs={6} style={{ marginTop: "20px" }}>
-        </Grid>
-        <Grid item sm={12} md={2}  style={{ marginTop: "20px" }}>
-          <RunSummary
+          <LapsTable
+            lapTableViewPref={lapTableViewPref}
             unitPref={unitPref}
             durationPref={durationPref}
-            lapTableViewPref={lapTableViewPref}
+            runData={runData}
+          />
+        </Grid>
+        <Grid item sm={12} md={2} style={{ marginTop: "20px" }}>
+          <RunSummary
+            value={value}
+            onChange={handleChange}
+            unitPref={unitPref}
+            durationPref={durationPref}
           />
         </Grid>
 

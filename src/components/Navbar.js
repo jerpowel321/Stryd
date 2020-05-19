@@ -12,7 +12,6 @@ import MailIcon from '@material-ui/icons/Mail';
 import { AppBar, Toolbar, Typography, Grid } from '@material-ui/core';
 import amber from '@material-ui/core/colors/amber';
 
-const primary = '#000000';
 const accent = amber[800];
 
 const useStyles = makeStyles({
