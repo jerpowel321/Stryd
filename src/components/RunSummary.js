@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid} from '@material-ui/core';
+import {Grid, Hidden} from '@material-ui/core';
 import { activityApi, userToken } from '../api'
 
 class Runsummary extends React.Component {
@@ -215,7 +215,7 @@ class Runsummary extends React.Component {
 
     return (
       <div>
-        <div className="hero">
+        <div className="hero">      </div>
 
           {this.state.dataLoaded === true ? <div>
             <div className="container" >
@@ -271,7 +271,7 @@ class Runsummary extends React.Component {
             :
             null
           }
-        </div>
+  
       </div>
     );
   }

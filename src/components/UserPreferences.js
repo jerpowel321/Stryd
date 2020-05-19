@@ -12,9 +12,10 @@ const useStyles = makeStyles({
     display: "block",
     width: "380px",
     border: "1px solid gainsboro",
-    padding: "50px 30px",
+    padding: "30px 10px",
     color: "white",
     backgroundColor: "#001a33",
+    margin: "auto"
   },
   grid: {
     flexGrow: 1,

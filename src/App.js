@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import UserPreferences from "./components/UserPreferences";
 import Navbar from "./components/Navbar";
 import RunSummary from "./components/RunSummary";
-import Footer from "./components/Footer";
 import LapsTable from "./components/LapsTable";
 import { Grid } from '@material-ui/core';
 
@@ -43,7 +42,7 @@ const App = () => {
     <main>
       <Navbar />
       <Grid container wrap="wrap" style={{ marginTop: "20px" }}>
-        <Grid item xs={4} style={{ marginTop: "20px" }}>
+        <Grid item xs={3} style={{ marginTop: "20px" }}>
           <UserPreferences
             value={value}
             onChange={handleChange}
@@ -57,7 +56,7 @@ const App = () => {
             runData={runData}
           />
         </Grid>
-        <Grid item sm={12} md={2} style={{ marginTop: "20px" }}>
+        <Grid item sm={12} md={3} style={{ marginTop: "20px" }}>
           <RunSummary
             value={value}
             onChange={handleChange}
@@ -69,7 +68,6 @@ const App = () => {
       </Grid>
 
       {/* </div> */}
-      {/* <Footer /> */}
 
     </main>
   );

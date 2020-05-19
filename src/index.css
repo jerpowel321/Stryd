@@ -3,9 +3,8 @@ html, main{
     padding: 0;
 }
 
-/* .hero {
+.hero {
     position: relative; 
-    height: 50vh;
     width: 100%;
     display: flex;
     align-items: center;
@@ -23,16 +22,6 @@ html, main{
       left: 0px;
       opacity: 0.75;
       z-index: -2000;
-}
- */
-
-
-#trackImg{
-    background-image: url("/images/track.jpg");
-    position: absolute;
-    clip: rect(0, 100px, 200px, 0);
-    /* width: 100%; */
-    /* overflow: hidden; */
 }
 
 .gradient-text {
