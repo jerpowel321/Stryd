@@ -17,7 +17,7 @@ const accent = amber[800];
 
 const useStyles = makeStyles({
     root: {
-        backgroundColor: primary,
+        backgroundColor: "#001a33",
     },
     button: {
         color: accent

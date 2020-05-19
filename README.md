@@ -199,4 +199,16 @@ Questions
 
 1) Can I assume that the recording is pausued where there is more than a 1 second gap between the `timestamp_list` datapoints.
 2) Can I assume the amounts in `distance_list` are displayed in yards?
-3) Can I assume that 
+
+
+<a href="https://icons8.com/icon/33504/running">Running icon by Icons8</a>
+
+
+
+Credits
+
+- Icons
+     - <a href="https://icons8.com/icon/42788/clock">Clock icon by Icons8</a>
+     - <a href="https://icons8.com/icon/43250/speed">Speed icon by Icons8</a>
+     - <a href="https://icons8.com/icon/NqzTiK3aS5zz/running">Running icon by Icons8</a>
+     - <a href="https://icons8.com/icon/P8Ke8TWgJawk/reflector-bulb">Reflector Bulb icon by Icons8</a>

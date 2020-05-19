@@ -17,12 +17,15 @@ const App = () => {
     // setValue(newValue);
     if (newValue === "Miles" || newValue === "Kilometers"){
       setUnitPref(newValue);
+      console.log(unitPref)
     }
     else if (newValue === "Elapsed" || newValue === "Moving"){
       setDurationPref(newValue);
+      console.log(durationPref)
     }
     else {
       setLapTableViewPref(newValue);
+      console.log(lapTableViewPref)
     }
   }
 
@@ -41,9 +44,8 @@ const App = () => {
       durationPref={durationPref}
       lapTableViewPref={lapTableViewPref}
       />
-
       </div>
-      <Footer />
+      {/* <Footer /> */}
 
     </main>
   );

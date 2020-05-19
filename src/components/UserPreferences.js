@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Typography, Box } from "@material-ui/core"
+import { Typography, Box, Grid } from "@material-ui/core"
 import amber from '@material-ui/core/colors/amber';
 import { makeStyles } from '@material-ui/core/styles';
+import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+import SettingsIcon from '@material-ui/icons/Settings';
+import TimerIcon from '@material-ui/icons/Timer';
+import BarChartIcon from '@material-ui/icons/BarChart';
 
 const primary = '#000000';
 const accent = amber[800];
@@ -9,31 +13,58 @@ const accent = amber[800];
 const useStyles = makeStyles({
   root: {
     display: "block",
-    width: "100%",
+    width: "380px",
     margin: "auto",
     border: "1px solid gainsboro",
-    padding: "30px 20px",
-    color: "white"
+    padding: "50px 30px",
+    color: "white",
+    backgroundColor: "#001a33",
+  },
+  grid: {
+    flexGrow: 1,
+  },
+  grid2:{
+    alignItems: "center",
+    paddingTop: "10px"
   },
   h2: {
-    display: "block"
+    margin: "auto",
+    padding: "10px 0px"
   },
   p: {
     display: "inline",
-    fontSize: "20px",
-    padding: "0px 20px 0px 0px"
+    fontSize: "22px",
+    verticalAlign: "middle"
+  },
+  icon: {
+    display: "inline",
+    paddingTop: "2px",
+    paddingRight: "7px",
+    color: "white",
+    width: "35px",
+    fontSize: "30px",
+    verticalAlign: "middle"
   },
   select: {
     fontSize: "16px",
     height: "40px",
-    border: `3px solid ${accent}`,
-    outline: "none"
+    outline: "none",
+    width: "140px",
     
   },
-  option: {
-    
+  selectFocused: {
+    minWidth: "140px",
+    width: "auto",
+    margin: "10px",
+    outlineColor: "yellow",
+    outlineStyle: "outset",
+    outlineWidth: "thin",
+  },
+  options: {
 
-  },
+  }
+ 
+
 
 });
 
@@ -53,58 +84,82 @@ const UserPreferences = props => {
 
   return (
     <section className={classes.root}>
-      <p>{unitPref}</p>
-      <p>{durationPref}</p>
-      <p>{lapTableViewPref}</p>
+      <Grid container className={classes.grid} spacing={2}>
+        <h2 align="center" className={classes.h2}>
+        <SettingsIcon className={classes.icon}/>
+        User Settings</h2>
+        <Grid item xs={12}>
+          <Grid container className={classes.grid2}>
+            <Grid item xs={6} >
+              <DirectionsRunIcon className={classes.icon}/>
+              <p className={classes.p}> 
+              Unit</p>
+            </Grid>
+            <Grid item xs={6} align="center">
+                <select
+                  className={classes.select}
+                  classes={{ focused: classes.selectFocused}}
+                  id={"unit-selector"}
+                  onChange={event => {
+                    setUnitPref(event.target.value);
+                    handleChange(event)
+                  }}
+                  value={unitPref}
+                >
+                  <option>Kilometers</option>
+                  <option>Miles</option>
+                </select>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container className={classes.grid2}>
+            <Grid item xs={6}>
+              <TimerIcon className={classes.icon}/>
+              <p className={classes.p}>Duration</p>
+            </Grid>
+            <Grid item xs={6} align="center">
+              <select
+                className={classes.select}
+                classes={{ focused: classes.selectFocused}}
+                id={"duration-type-selector"}
+                onChange={event => {
+                  setDurationPref(event.target.value);
+                  handleChange(event)
+                }}
+                value={durationPref}
+              >
+                <option>Moving</option>
+                <option>Elapsed</option>
+              </select>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container className={classes.grid2}>
+            <Grid item xs={6}>
+              <BarChartIcon className={classes.icon}/>
+            <p className={classes.p}> Lap Table View</p>
+            </Grid>
+            <Grid item xs={6} align="center">
+            <select
+            className={classes.select}
+            classes={{ focused: classes.selectFocused}}
+            id={"lap-table-type-selector"}
+            onChange={event => {
+              setLapTableViewPref(event.target.value);
+              handleChange(event)
+            }}
+            value={lapTableViewPref}
+          >
+            <option>Manual Splits</option>
+            <option>Distance Splits</option>
+          </select>
+              </Grid>
+          </Grid>
+        </Grid>
 
-      <h2 className={classes.h2}>User Settings</h2>
-      <Box display="flex" flexWrap="wrap">
-        <Box p={1} width={300} >
-        <p className={classes.p}>Unit Preference:</p>
-            <select
-              className={classes.select}
-              id={"unit-selector"}
-              onChange={event => {
-                setUnitPref(event.target.value);
-                handleChange(event)
-              }}
-              value={unitPref}
-            >
-              <option>Kilometers</option>
-              <option>Miles</option>
-            </select>
-        </Box>
-        <Box p={1} width={350}>
-        <p className={classes.p}>Duration Preference:</p>
-            <select
-              className={classes.select}
-              id={"duration-type-selector"}
-              onChange={event => {
-                setDurationPref(event.target.value);
-                handleChange(event)
-              }}
-              value={durationPref}
-            >
-              <option>Moving</option>
-              <option>Elapsed</option>
-            </select>
-        </Box>
-        <Box p={1} width={400}>
-        <p className={classes.p}> Lap Table View Preference:</p>
-            <select
-              className={classes.select}
-              id={"lap-table-type-selector"}
-              onChange={event => {
-                setLapTableViewPref(event.target.value);
-                handleChange(event)
-              }}
-              value={lapTableViewPref}
-            >
-              <option>Manual Splits</option>
-              <option>Distance Splits</option>
-            </select>
-        </Box>
-      </Box>
+      </Grid>
     </section>
   );
 };
