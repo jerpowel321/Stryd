@@ -5,8 +5,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-enterprise';
 import { createMuiTheme, ThemeProvider, duration } from '@material-ui/core/styles';
 import { Grid, } from '@material-ui/core';
-// import Barchart from './Components/BarChart';
-// import Piechart from './Components/PieChart';
+
 
 const theme = createMuiTheme({
     palette: {
@@ -25,15 +24,10 @@ class LapsTable extends React.Component {
             unitPref: this.props.unitPref,
             durationPref: this.props.durationPref,
             durationArray: [],
-            // sortedRunData: [],
             distanceArray: [],
             avgPowerArray: [],
             avgPaceArray: [],
             rowData: null,
-            //   barChartData: null,
-            //   pieChartData: null,
-            //   updateChart: false,
-            //   chartTitle: "",
             columnDefs: [
                 {
                     headerName: 'Lap Number',
@@ -142,8 +136,16 @@ class LapsTable extends React.Component {
 
 
 
-        // let peakPowers = [this.getPeakPowers([10, "s"]), this.getPeakPowers([3], "m"), this.getPeakPowers([5, "m"], this.getPeakPowers[10, "m"], this.getPeakPowers[30, "m"], this.getPeakPowers[60], "m")]
-        // console.log(peakPowers)
+        // let peakPowers = [this.getPeakPowers([10, "s"]),
+        //                 this.getPeakPowers([3], "m"),
+        //                 this.getPeakPowers([5, "m"],
+        //                 this.getPeakPowers[10, "m"],
+        //                 this.getPeakPowers[30, "m"],
+        //                 this.getPeakPowers[60], "m")]
+        console.log("1s peak", this.getPeakPowers(1, ""))
+        console.log("5s Peak", this.getPeakPowers(10, "s"))
+        console.log("20m peak", this.getPeakPowers(20, "m"))
+        //console.log("PeakPowers", peakPowers)
         
 
     }
@@ -369,50 +371,47 @@ class LapsTable extends React.Component {
         return ret;
     }
 
-    getPeakPowers([length, time]) {
-        console.log("In the get peak powers")
-        console.log("This is the length", length)
-        console.log("This is the time")
-        let seconds = (time === "s") ? length : length * 60
-        let maxAvg = 0;
-        for (let i = 0; i < this.state.runData.timestamp_list.length; i++) {
-            let sum = 0;
-            let count = 0;
-            for (let j = 0; j < seconds; j++) {
-                if (i !==j && this.state.runData.timestamp_list[i] + 1 === this.state.runData.timestamp_list[i + 1]) {
-                    sum += this.state.runData.total_power_list[j]
-                    count++
-                }
-            }
-            let avg = sum / count
-            if (count === seconds && maxAvg < avg) {
-                maxAvg = avg
-            }
+    getAvg(arr){
+        let total = 0;
+        for (let i=0; i < arr.length; i++) {
+            total += arr[i];
         }
-        console.log("This is the max Power Average", maxAvg)
+        return (total/arr.length);
     }
  
-
+   getPeakPowers(length, time) {
+        let seconds = (time === "s") ? length : length * 60
+        let arr = this.state.runData.total_power_list;
+        let peak = 0;
+        for(let i=0; i <= (arr.length-seconds); i++){
+            let new_arr = arr.slice(i, (i+seconds))
+            let avgPower = this.getAvg(new_arr);
+            if (avgPower > peak) {
+                peak= avgPower
+            }
+        }
+        return peak
+      }
+      
 
 
     render() {
+        
         return (
             <ThemeProvider theme={theme}>
+   
                 <h1 style={{ paddingBottom: '10px', color: "white" }} align="center">Laps Table
                 </h1>
-                {/* <div style={{backgroundColor: "white", zIndex: 2000}}> */}
-          
-                    <AgGridReact
+                <div style={{ height: '400px', width: '600px', margin: "auto"}} className="ag-theme-alpine">
+            <AgGridReact
                         style={{ backgroundColor: "white", zIndex: 2000 }}
                         columnDefs={this.state.columnDefs}
                         defaultColDef={this.state.defaultColDef}
                         rowData={this.state.rowData}
                         rowSelection='multiple'
                     />
-           
-
-                {/* </div> */}
-
+                   
+                   </div>
             </ThemeProvider >
         );
     }

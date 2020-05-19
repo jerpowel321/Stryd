@@ -15,14 +15,15 @@ const useStyles = makeStyles({
     padding: "30px 10px",
     color: "white",
     backgroundColor: "#001a33",
-    margin: "auto"
+    justifyItems: "center"
   },
   grid: {
     flexGrow: 1,
   },
   grid2:{
     alignItems: "center",
-    paddingTop: "10px"
+    paddingTop: "10px",
+    justify: "center",
   },
   h2: {
     margin: "auto",
@@ -81,7 +82,7 @@ const UserPreferences = props => {
 
   return (
     <section className={classes.root}>
-      <Grid container className={classes.grid} spacing={2}>
+      <Grid style={{margin: "auto"}} container className={classes.grid} spacing={2}>
         <h2 align="center" className={classes.h2}>
         <SettingsIcon className={classes.icon}/>
         User Settings</h2>
