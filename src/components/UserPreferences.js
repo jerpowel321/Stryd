@@ -5,12 +5,13 @@ import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import SettingsIcon from '@material-ui/icons/Settings';
 import TimerIcon from '@material-ui/icons/Timer';
 import BarChartIcon from '@material-ui/icons/BarChart';
+import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 
 
 const useStyles = makeStyles({
   root: {
     display: "block",
-    width: "380px",
+    width: "400px",
     border: "1px solid gainsboro",
     padding: "30px 10px",
     color: "white",
@@ -71,6 +72,8 @@ const UserPreferences = props => {
   const [unitPref, setUnitPref] = useState("Kilometers");
   const [durationPref, setDurationPref] = useState("Elapsed");
   const [lapTableViewPref, setLapTableViewPref] = useState("Manual Splits");
+  const [peakPowerViewPref, setPeakPowerViewPref] = useState("Bar Chart");
+
 
 
   function handleChange(event) {
@@ -152,6 +155,29 @@ const UserPreferences = props => {
           >
             <option>Manual Splits</option>
             <option>Distance Splits</option>
+          </select>
+              </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container className={classes.grid2}>
+            <Grid item xs={7}>
+              <FilterHdrIcon className={classes.icon}/>
+            <p className={classes.p}> Peak Powers View</p>
+            </Grid>
+            <Grid item xs={4} align="center">
+            <select
+            className={classes.select}
+            classes={{ focused: classes.selectFocused}}
+            id={"lap-table-type-selector"}
+            onChange={event => {
+              setPeakPowerViewPref(event.target.value);
+              handleChange(event)
+            }}
+            value={peakPowerViewPref}
+          >
+            <option>Bar Chart</option>
+            <option>Line Chart</option>
           </select>
               </Grid>
           </Grid>

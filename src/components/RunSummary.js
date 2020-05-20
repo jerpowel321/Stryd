@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Hidden} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 import { activityApi, userToken } from '../api'
 
 class Runsummary extends React.Component {
@@ -46,6 +46,7 @@ class Runsummary extends React.Component {
                 this.findAvgPace(data.speed_list)
                 this.findAvgPower(data.total_power_list)
                 this.passDataToParent(data)
+                console.log(this.state.runData)
               },
               () => this.setState({
                 dataLoaded: false
@@ -221,8 +222,6 @@ class Runsummary extends React.Component {
             <div className="container" >
               <h1 align="center" style={{ color: "white", backgroundColor: "#001a33", padding: "10px 10px", margin:"auto" }}>{this.state.runTitle}</h1>
               <Grid container alignContent="center" align="center" alignItems="stretch" justify="center" >
-                {/* <h1 >Run Summary</h1>*/}
-
                 <Grid item>
                   <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "20px 20px 10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
                     className="hvr-grow ">
@@ -265,6 +264,7 @@ class Runsummary extends React.Component {
                   </div>
 
                 </Grid>
+                
               </Grid>
             </div>
           </div>

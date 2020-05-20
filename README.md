@@ -181,22 +181,16 @@ See the create-react-app docs section about [deployment](https://facebook.github
 
 
 
-## Technologies
+## 🔧 Technologies
 - HTML
 - CSS
 - Javascript
 - Material UI
 - React
+- Chart.js
+- Ag-Grid
 
-
-
-
-
-<a href="https://icons8.com/icon/33504/running">Running icon by Icons8</a>
-
-
-
-## Credits
+## ✨Credits
 - Images
     - Photo by David Marcu on Unsplash
 
@@ -205,3 +199,4 @@ See the create-react-app docs section about [deployment](https://facebook.github
      - <a href="https://icons8.com/icon/43250/speed">Speed icon by Icons8</a>
      - <a href="https://icons8.com/icon/NqzTiK3aS5zz/running">Running icon by Icons8</a>
      - <a href="https://icons8.com/icon/P8Ke8TWgJawk/reflector-bulb">Reflector Bulb icon by Icons8</a>
+     - <a href="https://icons8.com/icon/65471/mountain">Mountain icon by Icons8</a>

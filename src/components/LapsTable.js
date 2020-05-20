@@ -5,6 +5,8 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-enterprise';
 import { createMuiTheme, ThemeProvider, duration } from '@material-ui/core/styles';
 import { Grid, } from '@material-ui/core';
+import Barchart from './Barchart'
+import Linechart from './Linechart'
 
 
 const theme = createMuiTheme({
@@ -102,20 +104,8 @@ class LapsTable extends React.Component {
         }
     }
 
-    componentDidMount() {
-
-        // {
-        //     let durations = [[10, "s"],[3,"m"],[5,"m"],[10,"m"],[30,"m"],[60,"m"]]
-        //     let maxAvgPower = 0; 
-        //     for (let i=0; i<this.runData.timestamp_list.length; i++){
-
-        //     }
-        // }
-
-
-    }
     componentWillReceiveProps({ unitPref, durationPref, lapTableViewPref, runData }) {
-        console.log(" LAPSSSSS TABLEEE   UPDATING================================>")
+        console.log(" LAPS TABLE UPDATING================================>")
         console.log(" Updating child Props")
         console.log({ unitPref })
         console.log({ durationPref })
@@ -131,23 +121,22 @@ class LapsTable extends React.Component {
     manipulateData = () => {
         console.log("Decorating Data")
         // Lap Number, Duration of the Lap (Moving or Total), Total Distance covered during the lap, average power of the lap, (moving or total), the average pace of the lap, moving or total
-        let rowData = { id: "", duration: "", distance: "", avgPower: "", avgPace: "" };
         this.getLapDistance()
-
-
-
-        // let peakPowers = [this.getPeakPowers([10, "s"]),
-        //                 this.getPeakPowers([3], "m"),
-        //                 this.getPeakPowers([5, "m"],
-        //                 this.getPeakPowers[10, "m"],
-        //                 this.getPeakPowers[30, "m"],
-        //                 this.getPeakPowers[60], "m")]
-        console.log("1s peak", this.getPeakPowers(1, ""))
-        console.log("5s Peak", this.getPeakPowers(10, "s"))
-        console.log("20m peak", this.getPeakPowers(20, "m"))
-        //console.log("PeakPowers", peakPowers)
-        
-
+        let peakPowers = [this.getPeakPowers(10, "s"),
+        this.getPeakPowers(3, "m"),
+        this.getPeakPowers(5, "m"),
+        this.getPeakPowers(10, "m"),
+        this.getPeakPowers(30, "m"),
+        this.getPeakPowers(60, "m")]
+        let labels = ["10 sec", "3 mins", "5 mins", "10 mins", "30 mins", "60 mins"]
+        // console.log("1s peak", this.getPeakPowers(1, ""))
+        // console.log("5s Peak", this.getPeakPowers(10, "s"))
+        // console.log("20m peak", this.getPeakPowers(20, "m"))
+        this.setState({
+            peakPowers: peakPowers,
+            peakPowersLabels: labels
+        })
+        console.log("PeakPowers", peakPowers)
     }
 
     getLapDistance() {
@@ -166,7 +155,7 @@ class LapsTable extends React.Component {
                     end = distanceData[j]
                     index = j
                 }
-                if (i !==0 && lapData[i] > timeStampData[j] && timeStampData[j] > start) {
+                if (i !== 0 && lapData[i] > timeStampData[j] && timeStampData[j] > start) {
                     end = distanceData[j]
                     index = j
                 }
@@ -204,16 +193,9 @@ class LapsTable extends React.Component {
         },
             () => this.getLapData()
         )
-
-
-
-
-
         this.setState({
             distanceArray: distanceArr
         })
-        // Lap duration
-        // Lap
 
         return distanceArr
     }
@@ -256,12 +238,12 @@ class LapsTable extends React.Component {
             let sumPower = 0;
             let count = 0;
             for (let j = 0; j < timeStampData.length; j++) {
-                if (i === 0 && lapData[i] >= timeStampData[j] && this.state.runData.total_power_list[j] !==0) {
+                if (i === 0 && lapData[i] >= timeStampData[j] && this.state.runData.total_power_list[j] !== 0) {
                     secondsPerLap++
                     sumPower += powerData[j]
                     count++
                 }
-                if (lapData[i] >= timeStampData[j] && lapData[i - 1] < timeStampData[j] && this.state.runData.total_power_list[j] !==0) {
+                if (lapData[i] >= timeStampData[j] && lapData[i - 1] < timeStampData[j] && this.state.runData.total_power_list[j] !== 0) {
                     secondsPerLap++
                     sumPower += powerData[j]
                     count++
@@ -371,47 +353,75 @@ class LapsTable extends React.Component {
         return ret;
     }
 
-    getAvg(arr){
+    getAvg(arr) {
         let total = 0;
-        for (let i=0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             total += arr[i];
         }
-        return (total/arr.length);
+        return (total / arr.length);
     }
- 
-   getPeakPowers(length, time) {
+
+    getPeakPowers(length, time) {
         let seconds = (time === "s") ? length : length * 60
         let arr = this.state.runData.total_power_list;
         let peak = 0;
-        for(let i=0; i <= (arr.length-seconds); i++){
-            let new_arr = arr.slice(i, (i+seconds))
+        for (let i = 0; i <= (arr.length - seconds); i++) {
+            let new_arr = arr.slice(i, (i + seconds))
             let avgPower = this.getAvg(new_arr);
             if (avgPower > peak) {
-                peak= avgPower
+                peak = avgPower
             }
         }
         return peak
-      }
-      
+    }
 
 
     render() {
-        
+
         return (
             <ThemeProvider theme={theme}>
-   
-                <h1 style={{ paddingBottom: '10px', color: "white" }} align="center">Laps Table
-                </h1>
-                <div style={{ height: '400px', width: '600px', margin: "auto"}} className="ag-theme-alpine">
-            <AgGridReact
-                        style={{ backgroundColor: "white", zIndex: 2000 }}
-                        columnDefs={this.state.columnDefs}
-                        defaultColDef={this.state.defaultColDef}
-                        rowData={this.state.rowData}
-                        rowSelection='multiple'
-                    />
-                   
-                   </div>
+                <Grid container >
+                    <Grid item style={{ margin: "auto" }}>
+                        <h1 style={{ paddingBottom: '10px', color: "white" }} align="center">Laps Table</h1>
+                        <div style={{ height: '400px', width: '600px', margin: "auto" }} className="ag-theme-alpine">
+                            <AgGridReact
+                                style={{ backgroundColor: "white", zIndex: 2000 }}
+                                columnDefs={this.state.columnDefs}
+                                defaultColDef={this.state.defaultColDef}
+                                rowData={this.state.rowData}
+                                rowSelection='multiple'
+                            />
+                        </div>
+                    </Grid>
+                    {this.state.peakPowers !== undefined ?
+                        <Grid item style={{ margin: "auto", minWidth: "80%" }}>
+                            <div style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", backgroundColor: "white", padding: "20px" }}>
+                                <Barchart
+                                    title={this.state.runData.name}
+                                    label="Best Average Power in Watts"
+                                    data={this.state.peakPowers}
+                                    labels={this.state.peakPowersLabels}
+                                />
+                            </div>
+                        </Grid>
+                        : null
+                    }
+                    {this.state.peakPowers !== undefined ?
+                        <Grid item style={{ margin: "auto", minWidth: "80%" }}>
+                            <div style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", backgroundColor: "white", padding: "20px" }}>
+                                <Linechart
+                                    title={this.state.runData.name}
+                                    label="Best Average Power in Watts"
+                                    data={this.state.peakPowers}
+                                    labels={this.state.peakPowersLabels}
+                                />
+                            </div>
+
+                        </Grid>
+                        : null
+                    }
+
+                </Grid>
             </ThemeProvider >
         );
     }
