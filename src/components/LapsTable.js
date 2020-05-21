@@ -1,11 +1,8 @@
 import React from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import 'ag-grid-enterprise';
 import { Grid, } from '@material-ui/core';
+import Table from './Table';
 
-  
+
 class LapsTable extends React.Component {
     constructor(props) {
         super(props);
@@ -18,77 +15,8 @@ class LapsTable extends React.Component {
             distanceArray: [],
             avgPowerArray: [],
             avgPaceArray: [],
-            columnDefs: [
-                {
-                    headerName: 'Lap Number',
-                    field: 'lapNumber',
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        filterOptions: ['contains', 'notContains'],
-                        debounceMs: 0,
-                        caseSensitive: false,
-                        suppressAndOrCondition: true,
-                    },
-                },
-                {
-                    headerName: 'Duration',
-                    field: 'lapDuration',
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        filterOptions: ['contains', 'notContains'],
-                        debounceMs: 0,
-                        caseSensitive: false,
-                        suppressAndOrCondition: true,
-                    },
-                },
-                {
-                    headerName: 'Distance',
-                    field: 'lapDistance',
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        filterOptions: ['contains', 'notContains'],
-                        debounceMs: 0,
-                        caseSensitive: false,
-                        suppressAndOrCondition: true,
-                    },
-                },
-                {
-                    headerName: 'Avg. Power of Lap',
-                    field: 'lapAvgPower',
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        filterOptions: ['contains', 'notContains'],
-                        debounceMs: 0,
-                        caseSensitive: false,
-                        suppressAndOrCondition: true,
-                    },
-                },
-                {
-                    headerName: 'Avg. Pace of Lap',
-                    field: 'lapAvgPace',
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        filterOptions: ['contains', 'notContains'],
-                        debounceMs: 0,
-                        caseSensitive: false,
-                        suppressAndOrCondition: true,
-                    },
-                },
-
-            ],
-            defaultColDef: {
-                flex: 1,
-                sortable: true,
-                filter: true,
-                floatingFilter: true,
-            },
             rowData: null,
-
+            loadTable: false
         }
     }
 
@@ -162,10 +90,10 @@ class LapsTable extends React.Component {
         },
             () => this.getLapAvgPace()
         )
-      
+
     }
 
-   
+
     getLapMovingDuration() {
         console.log("Get Lap Moving Duration")
         let lapData = this.state.runData.lap_timestamp_list;
@@ -196,7 +124,7 @@ class LapsTable extends React.Component {
             let avgPower = (sumPower / count).toFixed(0)
             totalAvgPower.push(avgPower)
         }
-        console.log(totalDuration)
+        console.log("This is total duration ", totalDuration)
         console.log(" THIS IS THE TOTAL AVG POWER ", totalAvgPower)
         this.setState({
             avgPowerArray: totalAvgPower
@@ -257,12 +185,12 @@ class LapsTable extends React.Component {
         return totalDuration
     }
 
-    getLapAvgPace(){        
+    getLapAvgPace() {
         let duration = this.state.durationArray;
         let distance = this.state.distanceArray;
         let totalAvgPace = []
-        for (let i =0; i<duration.length; i++){
-            let speed = (this.getSeconds(duration[i])/60)/distance[i]
+        for (let i = 0; i < duration.length; i++) {
+            let speed = (this.getSeconds(duration[i]) / 60) / distance[i]
             speed = speed.toFixed(2)
             let hms = this.convertToHMS(speed * 60)
             totalAvgPace.push(hms)
@@ -270,7 +198,7 @@ class LapsTable extends React.Component {
         this.setState({
             avgPaceArray: totalAvgPace
         },
-        () => this.getLapData()
+            () => this.getLapData()
         )
     }
     getLapData() {
@@ -293,7 +221,8 @@ class LapsTable extends React.Component {
         }
         console.log(tableData);
         this.setState({
-            rowData: tableData
+            rowData: tableData,
+            loadTable: true
         })
     }
 
@@ -305,7 +234,6 @@ class LapsTable extends React.Component {
     convertToMiles(distanceInMeters) {
         let miles = distanceInMeters / 1609;
         miles = miles
-        console.log("this is the miles ", miles)
         return miles
     }
     convertToHMS(time) {
@@ -334,23 +262,13 @@ class LapsTable extends React.Component {
     render() {
 
         return (
-
-            // <Grid container style={{ justifyItems: "center" }} >
-            <Grid item xs={12} style={{ margin: "20px 0px"}}>
-                <div style={{padding: "0px 20px 20px 20px"}}> 
-                    <h1 style={{ color: "white", textAlign: "center", paddingTop: "10px", paddingBottom: "10px", margin: "0px 0px 20px 0px" }} align="center">Laps Table
-                    </h1>
-                    <div style={{ height: 400, padding: "0px 20px 20px 20px" }} className="ag-theme-alpine">
-                        <AgGridReact
-                            style={{ zIndex: 2000 }}
-                            columnDefs={this.state.columnDefs}
-                            defaultColDef={this.state.defaultColDef}
-                            rowData={this.state.rowData}
-                            rowSelection='multiple'
-                        />
-                    </div>
-                </div>
-                <Grid />
+            <Grid item xs={12} style={{ margin: "20px 0px" }}>
+                {this.state.loadTable === true ? 
+                    <Table 
+                    title="Laps Table"
+                    rowData={this.state.rowData}/>
+                : null
+                }
             </Grid>
         );
     }
