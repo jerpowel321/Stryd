@@ -3,11 +3,8 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-enterprise';
-import { createMuiTheme, ThemeProvider, duration } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Grid, } from '@material-ui/core';
-import Barchart from './Barchart'
-import Linechart from './Linechart'
-
 
 const theme = createMuiTheme({
     palette: {
@@ -29,7 +26,6 @@ class LapsTable extends React.Component {
             distanceArray: [],
             avgPowerArray: [],
             avgPaceArray: [],
-            rowData: null,
             columnDefs: [
                 {
                     headerName: 'Lap Number',
@@ -120,23 +116,7 @@ class LapsTable extends React.Component {
     }
     manipulateData = () => {
         console.log("Decorating Data")
-        // Lap Number, Duration of the Lap (Moving or Total), Total Distance covered during the lap, average power of the lap, (moving or total), the average pace of the lap, moving or total
         this.getLapDistance()
-        let peakPowers = [this.getPeakPowers(10, "s"),
-        this.getPeakPowers(3, "m"),
-        this.getPeakPowers(5, "m"),
-        this.getPeakPowers(10, "m"),
-        this.getPeakPowers(30, "m"),
-        this.getPeakPowers(60, "m")]
-        let labels = ["10 sec", "3 mins", "5 mins", "10 mins", "30 mins", "60 mins"]
-        // console.log("1s peak", this.getPeakPowers(1, ""))
-        // console.log("5s Peak", this.getPeakPowers(10, "s"))
-        // console.log("20m peak", this.getPeakPowers(20, "m"))
-        this.setState({
-            peakPowers: peakPowers,
-            peakPowersLabels: labels
-        })
-        console.log("PeakPowers", peakPowers)
     }
 
     getLapDistance() {
@@ -353,76 +333,26 @@ class LapsTable extends React.Component {
         return ret;
     }
 
-    getAvg(arr) {
-        let total = 0;
-        for (let i = 0; i < arr.length; i++) {
-            total += arr[i];
-        }
-        return (total / arr.length);
-    }
-
-    getPeakPowers(length, time) {
-        let seconds = (time === "s") ? length : length * 60
-        let arr = this.state.runData.total_power_list;
-        let peak = 0;
-        for (let i = 0; i <= (arr.length - seconds); i++) {
-            let new_arr = arr.slice(i, (i + seconds))
-            let avgPower = this.getAvg(new_arr);
-            if (avgPower > peak) {
-                peak = avgPower
-            }
-        }
-        return peak
-    }
-
 
     render() {
 
         return (
-            <ThemeProvider theme={theme}>
-                <Grid container >
-                    <Grid item style={{ margin: "auto" }}>
-                        <h1 style={{ paddingBottom: '10px', color: "white" }} align="center">Laps Table</h1>
-                        <div style={{ height: '400px', width: '600px', margin: "auto" }} className="ag-theme-alpine">
-                            <AgGridReact
-                                style={{ backgroundColor: "white", zIndex: 2000 }}
-                                columnDefs={this.state.columnDefs}
-                                defaultColDef={this.state.defaultColDef}
-                                rowData={this.state.rowData}
-                                rowSelection='multiple'
-                            />
-                        </div>
-                    </Grid>
-                    {this.state.peakPowers !== undefined ?
-                        <Grid item style={{ margin: "auto", minWidth: "80%" }}>
-                            <div style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", backgroundColor: "white", padding: "20px" }}>
-                                <Barchart
-                                    title={this.state.runData.name}
-                                    label="Best Average Power in Watts"
-                                    data={this.state.peakPowers}
-                                    labels={this.state.peakPowersLabels}
-                                />
-                            </div>
-                        </Grid>
-                        : null
-                    }
-                    {this.state.peakPowers !== undefined ?
-                        <Grid item style={{ margin: "auto", minWidth: "80%" }}>
-                            <div style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", backgroundColor: "white", padding: "20px" }}>
-                                <Linechart
-                                    title={this.state.runData.name}
-                                    label="Best Average Power in Watts"
-                                    data={this.state.peakPowers}
-                                    labels={this.state.peakPowersLabels}
-                                />
-                            </div>
 
-                        </Grid>
-                        : null
-                    }
-
-                </Grid>
-            </ThemeProvider >
+            // <Grid container style={{ justifyItems: "center" }} >
+                <Grid item xs={12} style={{ margin: "auto" }}>
+                    <h1 style={{ display: "block", paddingBottom: '10px', color: "white", textAlign: "center" }} align="center">Laps Table
+                    </h1>
+                    <div style={{ height: 400, width: '100%' }} className="ag-theme-alpine">
+                        <AgGridReact
+                            style={{ backgroundColor: "white", zIndex: 2000 }}
+                            columnDefs={this.state.columnDefs}
+                            defaultColDef={this.state.defaultColDef}
+                            rowData={this.state.rowData}
+                            rowSelection='multiple'
+                        />
+                    </div>
+                 <Grid />
+            </Grid>     
         );
     }
 }

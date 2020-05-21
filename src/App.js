@@ -4,12 +4,14 @@ import Navbar from "./components/Navbar";
 import RunSummary from "./components/RunSummary";
 import LapsTable from "./components/LapsTable";
 import { Grid } from '@material-ui/core';
+import PeakPowers from "./components/PeakPowers";
 
 const App = () => {
   const [value, setValue] = React.useState("");
   const [unitPref, setUnitPref] = useState("Kilometers");
   const [durationPref, setDurationPref] = useState("Elapsed");
   const [lapTableViewPref, setLapTableViewPref] = useState("Manual Splits");
+  const [peakPowerViewPref, setpeakPowerViewPref] = useState("Bar Chart");
   const [runData, setRunData] = useState({});
 
 
@@ -30,6 +32,10 @@ const App = () => {
       setLapTableViewPref(newValue);
       console.log(lapTableViewPref)
     }
+    else if (newValue === "Bar Chart" || newValue === "Line Chart") {
+      setpeakPowerViewPref(newValue);
+      console.log(peakPowerViewPref)
+    }
     else {
       setRunData(newValue);
       console.log(runData)
@@ -42,18 +48,23 @@ const App = () => {
     <main>
       <Navbar />
       <Grid container wrap="wrap" style={{ marginTop: "20px" }}>
-        <Grid item xs={3} style={{ marginTop: "20px" }}>
           <UserPreferences
             value={value}
             onChange={handleChange}
-          />
-        </Grid>
-        <Grid item sm={12} md={6} style={{ marginTop: "20px" }}>
+          />        
+        <Grid item sm={12} md={6} style={{ marginTop: "20px", margin: "auto"}}>
           <LapsTable
             lapTableViewPref={lapTableViewPref}
             unitPref={unitPref}
             durationPref={durationPref}
             runData={runData}
+          />
+          <PeakPowers
+            lapTableViewPref={lapTableViewPref}
+            unitPref={unitPref}
+            durationPref={durationPref}
+            runData={runData}
+            peakPowerViewPref={peakPowerViewPref}
           />
         </Grid>
         <Grid item sm={12} md={3} style={{ marginTop: "20px" }}>
@@ -67,7 +78,6 @@ const App = () => {
 
       </Grid>
 
-      {/* </div> */}
 
     </main>
   );

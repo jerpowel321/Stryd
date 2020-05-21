@@ -1,6 +1,5 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
-import Grid from '@material-ui/core/Grid'
 
 
 export default class Barchart extends React.Component {
@@ -10,7 +9,7 @@ export default class Barchart extends React.Component {
             datasets: [
                 {
                     label: this.props.label,
-                    backgroundColor: 'pink',
+                    backgroundColor: '#FF8E53',
                     hoverBackgroundColor: 'pink',
                     hoverBorderColor: 'black',
                     data: this.props.data,

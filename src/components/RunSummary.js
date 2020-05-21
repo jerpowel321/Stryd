@@ -1,6 +1,18 @@
 import React from 'react';
-import {Grid} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { activityApi, userToken } from '../api'
+import { withStyles } from '@material-ui/styles';
+import Cards from "./Card";
+
+const styles = theme => ({
+  h1: {
+    color: "white",
+    backgroundColor: "#001a33",
+    padding: "10px 20px",
+    margin: "auto",
+    marginBottom: "10px"
+  },
+});
 
 class Runsummary extends React.Component {
   constructor(props) {
@@ -17,7 +29,6 @@ class Runsummary extends React.Component {
       dataLoaded: false,
       lapTableViewPref: this.props.lapTableViewPref,
     }
-    // this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -205,73 +216,54 @@ class Runsummary extends React.Component {
 
   passDataToParent(runData) {
     // console.log("=======Child handle change")
-    // console.log("RAWRRR")
-    // console.log(runData)
     // Invoke the callback with the new value
     this.props.onChange(runData);
   }
 
 
   render() {
-
+    const { classes } = this.props;
     return (
       <div>
-        <div className="hero">      </div>
-
-          {this.state.dataLoaded === true ? <div>
-            <div className="container" >
-              <h1 align="center" style={{ color: "white", backgroundColor: "#001a33", padding: "10px 10px", margin:"auto" }}>{this.state.runTitle}</h1>
-              <Grid container alignContent="center" align="center" alignItems="stretch" justify="center" >
-                <Grid item>
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "20px 20px 10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                    className="hvr-grow ">
-                    <div style={{ minHeight: "100px" }}>
-                      <img style={{ paddingTop: "20px" }} src="https://img.icons8.com/dusk/64/000000/clock.png" alt="Clock" />
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>{this.state.durationPref} Duration</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.duration} </p>
-                  </div>
-                </Grid>
-                <Grid item >
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                    className="hvr-grow">
-                    <div style={{ minHeight: "100px" }}>
-                      <img style={{ paddingTop: "20px" }} width="60px" src="https://img.icons8.com/color/96/000000/ruler.png" alt="Ruler" />
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>Distance</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.distance} {this.state.unitPref}</p>
-                  </div>
-                </Grid>
-                <Grid item >
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                  className="hvr-grow">
-                    <div style={{ minHeight: "100px" }}
-                      className="hvr-grow" >
-                      <img width="80px" style={{ paddingTop: "10px" }} src="https://img.icons8.com/plasticine/100/000000/running.png" alt="Runner" />
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>Average Pace</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.avgPace}</p>
-                  </div>
-                </Grid>
-                <Grid item >
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                    className="hvr-grow">
-                    <div style={{ minHeight: "100px" }}>
-                      <img width="60px" style={{ paddingTop: "20px" }} src="https://img.icons8.com/officel/80/000000/reflector-bulb.png" alt="Light Bulb"/>
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>Average Power</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.avgPower} Watts (W)</p>
-                  </div>
-
-                </Grid>
-                
-              </Grid>
-            </div>
+        <div className="hero"> </div>
+        {this.state.dataLoaded === true ? <div>
+          <div className="container" >
+            <h1 align="center" class={classes.h1}>{this.state.runTitle}</h1>
+            <Grid container alignContent="center" align="center" alignItems="stretch" justify="center" >
+              <Cards
+                title={`${this.state.durationPref} Duration`}
+                p={this.state.duration}
+                src="https://img.icons8.com/dusk/64/000000/clock.png"
+                alt="Clock"
+              />
+              <Cards
+                title="Distance"
+                p={`${this.state.distance} ${this.state.unitPref}`}
+                src="https://img.icons8.com/color/96/000000/ruler.png"
+                alt="Ruler"
+                imgWidth="60px"
+              />
+              <Cards
+                title="Average Pace"
+                p={this.state.avgPace}
+                src="https://img.icons8.com/plasticine/100/000000/running.png"
+                alt="Runner"
+                imgWidth="80px"
+              />
+              <Cards
+                title="Average Power"
+                p={`${this.state.avgPower} Watts (W)`}
+                src="https://img.icons8.com/officel/80/000000/reflector-bulb.png"
+                alt="Light Bulb"
+                imgWidth="60px"
+              />
+            </Grid>
           </div>
-            :
-            null
-          }
-  
+        </div>
+          :
+          null
+        }
+
       </div>
     );
   }
@@ -279,5 +271,4 @@ class Runsummary extends React.Component {
 
 
 
-
-export default Runsummary;
+export default withStyles(styles)(Runsummary);

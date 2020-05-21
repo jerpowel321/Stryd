@@ -11,12 +11,14 @@ import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 const useStyles = makeStyles({
   root: {
     display: "block",
-    width: "400px",
+    maxWidth: "450px",
     border: "1px solid gainsboro",
     padding: "30px 10px",
     color: "white",
     backgroundColor: "#001a33",
-    justifyItems: "center"
+    justifyItems: "center",
+    margin: "auto",
+    marginTop: "20px", 
   },
   grid: {
     flexGrow: 1,
@@ -27,8 +29,11 @@ const useStyles = makeStyles({
     justify: "center",
   },
   h2: {
-    margin: "auto",
-    padding: "10px 0px"
+    display: "inline",
+    verticalAlign: "middle",
+  },
+  div: {
+    padding: "20px 0px"
   },
   p: {
     display: "inline",
@@ -84,11 +89,13 @@ const UserPreferences = props => {
   }
 
   return (
-    <section className={classes.root}>
-      <Grid style={{margin: "auto"}} container className={classes.grid} spacing={2}>
+    <Grid item className={classes.root} justify="center" xs={10} sm={8} md={3} >
+      <div align="center" className={classes.div}>
+      <SettingsIcon className={classes.icon}/>
         <h2 align="center" className={classes.h2}>
-        <SettingsIcon className={classes.icon}/>
         User Settings</h2>
+      </div>
+      <Grid style={{margin: "auto"}} container className={classes.grid} spacing={2}>
         <Grid item xs={12}>
           <Grid container className={classes.grid2}>
             <Grid item xs={6} >
@@ -183,8 +190,8 @@ const UserPreferences = props => {
           </Grid>
         </Grid>
 
-      </Grid>
-    </section>
+      </Grid>     
+    </Grid>
   );
 };
 
