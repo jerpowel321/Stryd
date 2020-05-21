@@ -3,16 +3,9 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-enterprise';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { Grid, } from '@material-ui/core';
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#004159'
-        },
-    },
-});
 
 class LapsTable extends React.Component {
     constructor(props) {
@@ -40,7 +33,7 @@ class LapsTable extends React.Component {
                     },
                 },
                 {
-                    headerName: 'Duration of Lap',
+                    headerName: 'Duration',
                     field: 'lapDuration',
                     sortable: true,
                     filter: 'agTextColumnFilter',
@@ -52,7 +45,7 @@ class LapsTable extends React.Component {
                     },
                 },
                 {
-                    headerName: 'Total Distance',
+                    headerName: 'Distance',
                     field: 'lapDistance',
                     sortable: true,
                     filter: 'agTextColumnFilter',
@@ -64,7 +57,7 @@ class LapsTable extends React.Component {
                     },
                 },
                 {
-                    headerName: 'Average Power of Lap',
+                    headerName: 'Avg. Power of Lap',
                     field: 'lapAvgPower',
                     sortable: true,
                     filter: 'agTextColumnFilter',
@@ -76,7 +69,7 @@ class LapsTable extends React.Component {
                     },
                 },
                 {
-                    headerName: 'Average Pace of Lap',
+                    headerName: 'Avg. Pace of Lap',
                     field: 'lapAvgPace',
                     sortable: true,
                     filter: 'agTextColumnFilter',
@@ -339,20 +332,22 @@ class LapsTable extends React.Component {
         return (
 
             // <Grid container style={{ justifyItems: "center" }} >
-                <Grid item xs={12} style={{ margin: "auto" }}>
-                    <h1 style={{ display: "block", paddingBottom: '10px', color: "white", textAlign: "center" }} align="center">Laps Table
+            <Grid item xs={12} style={{ margin: "20px 0px"}}>
+                <div style={{padding: "0px 20px 20px 20px"}}> 
+                    <h1 style={{ color: "white", textAlign: "center", paddingTop: "10px", paddingBottom: "10px", margin: "0px 0px 20px 0px" }} align="center">Laps Table
                     </h1>
-                    <div style={{ height: 400, width: '100%' }} className="ag-theme-alpine">
+                    <div style={{ height: 400, padding: "0px 20px 20px 20px" }} className="ag-theme-alpine">
                         <AgGridReact
-                            style={{ backgroundColor: "white", zIndex: 2000 }}
+                            style={{ zIndex: 2000 }}
                             columnDefs={this.state.columnDefs}
                             defaultColDef={this.state.defaultColDef}
                             rowData={this.state.rowData}
                             rowSelection='multiple'
                         />
                     </div>
-                 <Grid />
-            </Grid>     
+                </div>
+                <Grid />
+            </Grid>
         );
     }
 }

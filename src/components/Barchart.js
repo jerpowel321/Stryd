@@ -10,8 +10,11 @@ export default class Barchart extends React.Component {
                 {
                     label: this.props.label,
                     backgroundColor: '#FF8E53',
-                    hoverBackgroundColor: 'pink',
+                    borderWidth: 2,
+                    borderColor: 'black',
+                    hoverBackgroundColor: '#fecc91',
                     hoverBorderColor: 'black',
+                    hoverBorderWidth: 1,
                     data: this.props.data,
                 }
             ],
@@ -26,13 +29,26 @@ export default class Barchart extends React.Component {
                     ticks: {
                         min: 0,
                         max: 10,
+                        fontSize: 16
                         // display: false
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time Intervals",
+                        fontColor: "black",
+                        fontSize: 18,
                     }
                 }],
                 yAxes: [{
                     gridLines: {
                         display: false,
-                    }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Average Power (W)",
+                        fontColor: "black",
+                        fontSize: 18,
+                      }
                 }]
             }
         }

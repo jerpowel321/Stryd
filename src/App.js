@@ -52,7 +52,7 @@ const App = () => {
             value={value}
             onChange={handleChange}
           />        
-        <Grid item sm={12} md={6} style={{ marginTop: "20px", margin: "auto"}}>
+        <Grid item xs={12} md={6} style={{ marginTop: "20px", margin: "auto"}}>
           <LapsTable
             lapTableViewPref={lapTableViewPref}
             unitPref={unitPref}
