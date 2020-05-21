@@ -68,12 +68,6 @@ class Runsummary extends React.Component {
   }
 
   componentWillReceiveProps({ unitPref, durationPref }) {
-    // console.log("UPDATING================================>")
-    // console.log(" Updating child Props")
-    // console.log({ unitPref })
-    // console.log({ durationPref })
-    // console.log(this.state.runData)
-
     this.setState({
       ...this.state, unitPref, durationPref
     },
@@ -89,7 +83,6 @@ class Runsummary extends React.Component {
           }
         )
     )
-
   }
 
   findAvgPower(powerData) {
@@ -124,13 +117,6 @@ class Runsummary extends React.Component {
     speed = ((seconds / 60) / this.state.distance)
     speed = speed.toFixed(2)
     let hms = this.convertToHMS(speed * 60)
-    // console.log("this is the duration", this.state.duration)
-    // console.log("this is the speed", speed);
-    // console.log("speed converted to hms ", this.convertToHMS(speed * 60))
-    // console.log("This is the seconds ", seconds);
-    // console.log("This is the distance ", this.state.distance)
-    // console.log("This is how many minutes per " + this.state.unitPref + " : " + speed + " " + this.state.durationPref)
-    // console.log("this is the average pace ", hms)
     this.setState({
       avgPace: hms
     })
@@ -228,7 +214,7 @@ class Runsummary extends React.Component {
         <div className="hero"> </div>
         {this.state.dataLoaded === true ? <div>
           <div className="container" >
-            <h1 align="center" class={classes.h1}>{this.state.runTitle}</h1>
+            <h1 align="center" className={classes.h1}>{this.state.runTitle}</h1>
             <Grid container alignContent="center" align="center" alignItems="stretch" justify="center" >
               <Cards
                 title={`${this.state.durationPref} Duration`}

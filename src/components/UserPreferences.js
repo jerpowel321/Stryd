@@ -89,7 +89,7 @@ const UserPreferences = props => {
   }
 
   return (
-    <Grid item className={classes.root} justify="center" xs={10} sm={8} md={3} >
+    <Grid item className={classes.root} xs={10} sm={8} md={3} >
       <div align="center" className={classes.div}>
       <SettingsIcon className={classes.icon}/>
         <h2 align="center" className={classes.h2}>

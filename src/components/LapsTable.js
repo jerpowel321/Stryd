@@ -3,10 +3,9 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-enterprise';
-import { createMuiTheme } from '@material-ui/core/styles';
 import { Grid, } from '@material-ui/core';
 
-
+  
 class LapsTable extends React.Component {
     constructor(props) {
         super(props);
@@ -104,15 +103,12 @@ class LapsTable extends React.Component {
         this.setState({
             ...this.state, unitPref, durationPref, lapTableViewPref, runData
         },
-            () => { this.manipulateData() }
+            () => { this.getLapDistance() }
         )
-    }
-    manipulateData = () => {
-        console.log("Decorating Data")
-        this.getLapDistance()
     }
 
     getLapDistance() {
+        console.log("GETTING LAP DISTANCE")
         let lapData = this.state.runData.lap_timestamp_list;
         let timeStampData = this.state.runData.timestamp_list;
         let distanceData = this.state.runData.distance_list;
@@ -136,20 +132,18 @@ class LapsTable extends React.Component {
             let diff = end - start
             if (this.state.unitPref === "Miles") {
                 diff = this.convertToMiles(diff)
-                console.log(typeof diff);
                 diff = Math.round(diff * 100) / 100
                 sum += diff
             }
             if (this.state.unitPref === "Kilometers") {
                 diff = this.convertToKilometers(diff)
-                console.log(typeof diff);
                 diff = Math.round(diff * 100) / 100
                 sum += diff
             }
             distanceArr.push(diff)
             start = distanceData[index]
         }
-        console.log("This is the distance array for each lap ", distanceArr)
+        console.log("This is the distance array", distanceArr)
         console.log("Total Distance ", sum)
 
         let duration = [];
@@ -161,43 +155,17 @@ class LapsTable extends React.Component {
             console.log("Elapsed Duration")
             duration = this.getLapElapsedDuration(distanceArr)
         }
+        this.getLapAvgPace()
         this.setState({
             durationArray: duration,
-        },
-            () => this.getLapData()
-        )
-        this.setState({
             distanceArray: distanceArr
-        })
-
-        return distanceArr
+        },
+            () => this.getLapAvgPace()
+        )
+      
     }
 
-    getLapData() {
-        console.log("Building Lap data");
-        let tableData = [];
-        let durations = this.state.durationArray;
-        let distances = this.state.distanceArray;
-        let powers = this.state.avgPowerArray;
-        let index = 1;
-        for (let i = 0; i < this.state.runData.lap_timestamp_list.length; i++) {
-
-            tableData.push({
-                "lapNumber": index,
-                "lapDuration": durations[i],
-                "lapDistance": distances[i],
-                "lapAvgPower": powers[i],
-                "lapAvgPace": 0,
-            })
-            index++;
-        }
-        console.log(tableData);
-        this.setState({
-            rowData: tableData
-        })
-        return tableData;
-
-    }
+   
     getLapMovingDuration() {
         console.log("Get Lap Moving Duration")
         let lapData = this.state.runData.lap_timestamp_list;
@@ -275,11 +243,7 @@ class LapsTable extends React.Component {
             startTime = timeStampData[endTimeIndex]
             totalSeconds += duration
             if (this.state.unitPref === "Kilometers") {
-                console.log(duration)
-                console.log("This is the sum power ", sumPower)
-                console.log("This is the distance ", distanceArr[0])
                 let avgPower = (sumPower / duration).toFixed(0)
-                console.log("This is the avgPower", avgPower)
                 totalAvgPower.push(avgPower)
             }
             else {
@@ -287,15 +251,51 @@ class LapsTable extends React.Component {
                 totalAvgPower.push(avgPower)
             }
         }
-        console.log("This is elapsed duration ....")
-        console.log(totalDuration)
-        console.log(" THIS IS THE TOTAL AVG POWER ", totalAvgPower)
         this.setState({
             avgPowerArray: totalAvgPower
         })
         return totalDuration
     }
 
+    getLapAvgPace(){        
+        let duration = this.state.durationArray;
+        let distance = this.state.distanceArray;
+        let totalAvgPace = []
+        for (let i =0; i<duration.length; i++){
+            let speed = (this.getSeconds(duration[i])/60)/distance[i]
+            speed = speed.toFixed(2)
+            let hms = this.convertToHMS(speed * 60)
+            totalAvgPace.push(hms)
+        }
+        this.setState({
+            avgPaceArray: totalAvgPace
+        },
+        () => this.getLapData()
+        )
+    }
+    getLapData() {
+        console.log("Building Lap data");
+        let tableData = [];
+        let durations = this.state.durationArray;
+        let distances = this.state.distanceArray;
+        let powers = this.state.avgPowerArray;
+        let pace = this.state.avgPaceArray;
+        let index = 1;
+        for (let i = 0; i < this.state.runData.lap_timestamp_list.length; i++) {
+            tableData.push({
+                "lapNumber": index,
+                "lapDuration": durations[i],
+                "lapDistance": distances[i],
+                "lapAvgPower": powers[i],
+                "lapAvgPace": pace[i],
+            })
+            index++;
+        }
+        console.log(tableData);
+        this.setState({
+            rowData: tableData
+        })
+    }
 
     convertToKilometers(distanceInMeters) {
         let kilometers = distanceInMeters / 1000;
@@ -325,7 +325,11 @@ class LapsTable extends React.Component {
         ret += "" + secs;
         return ret;
     }
-
+    getSeconds(hms) {
+        let a = hms.split(':');
+        let seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+        return seconds
+    }
 
     render() {
 

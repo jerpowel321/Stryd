@@ -98,7 +98,7 @@ export default function TemporaryDrawer() {
                         <Grid item xs={12} sm={1}>
                         <Button className={classes.button}>Blog</Button>
                         </Grid>
-                        <Grid xs={12} sm={2}>
+                        <Grid item xs={12} sm={2}>
                         <Button className={classes.button}>Contact</Button>
                         </Grid>
                     </Grid>

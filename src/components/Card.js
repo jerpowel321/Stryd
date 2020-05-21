@@ -41,7 +41,7 @@ const Cards = (props) => {
           <div className={classes.div2}>
             <img className={classes.img} width={props.imgWidth} src={props.src} alt={props.alt} />
           </div>
-          <h3 class={classes.h3}>{props.title}</h3>
+          <h3 className={classes.h3}>{props.title}</h3>
           <p className={classes.p}>{props.p}</p>
         </div>
       </Grid>
