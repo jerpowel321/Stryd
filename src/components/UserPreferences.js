@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     paddingTop: "10px",
     justify: "center",
   },
-  h2: {
+  h1: {
     display: "inline",
     verticalAlign: "middle",
   },
@@ -92,8 +92,8 @@ const UserPreferences = props => {
     <Grid item className={classes.root} xs={10} sm={8} md={3} >
       <div align="center" className={classes.div}>
       <SettingsIcon className={classes.icon}/>
-        <h2 align="center" className={classes.h2}>
-        User Settings</h2>
+        <h1 align="center" className={classes.h1}>
+        User Settings</h1>
       </div>
       <Grid style={{margin: "auto"}} container className={classes.grid} spacing={2}>
         <Grid item xs={12}>

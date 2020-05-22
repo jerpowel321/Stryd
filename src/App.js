@@ -52,7 +52,10 @@ const App = () => {
             value={value}
             onChange={handleChange}
           />        
-        <Grid item xs={12} md={6} style={{ marginTop: "20px", margin: "auto"}}>
+        <Grid item xs={12} md={6} style={{ marginTop: "20px", margin: "auto",   padding: "30px 10px", 
+        // backgroundColor: "#001a33"
+      }}
+        >
           <LapsTable
             lapTableViewPref={lapTableViewPref}
             unitPref={unitPref}
@@ -67,7 +70,7 @@ const App = () => {
             peakPowerViewPref={peakPowerViewPref}
           />
         </Grid>
-        <Grid item sm={12} md={3} style={{ marginTop: "20px" }}>
+        <Grid item sm={12} md={3} style={{ marginTop: "20px",   padding: "30px 10px", }}>
           <RunSummary
             value={value}
             onChange={handleChange}
@@ -75,10 +78,7 @@ const App = () => {
             durationPref={durationPref}
           />
         </Grid>
-
       </Grid>
-
-
     </main>
   );
 };

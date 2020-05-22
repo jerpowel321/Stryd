@@ -36,61 +36,65 @@ class LapsTable extends React.Component {
     }
 
     getLapDistance() {
-        console.log("GETTING LAP DISTANCE")
-        let lapData = this.state.runData.lap_timestamp_list;
-        let timeStampData = this.state.runData.timestamp_list;
-        let distanceData = this.state.runData.distance_list;
-        let start = "";
-        let end = "";
-        let index = 0;
-        let distanceArr = [];
-        let sum = 0
-        for (let i = 0; i < lapData.length; i++) {
-            for (let j = 0; j < timeStampData.length; j++) {
-                if (i === 0 && lapData[i] > timeStampData[j]) {
-                    start = 0
-                    end = distanceData[j]
-                    index = j
+        if (this.state.lapTableViewPref === "Distance Splits") {
+            this.getDistanceSplits()
+        }
+        else {
+            console.log("GETTING LAP DISTANCE")
+            let lapData = this.state.runData.lap_timestamp_list;
+            let timeStampData = this.state.runData.timestamp_list;
+            let distanceData = this.state.runData.distance_list;
+            let start = "";
+            let end = "";
+            let index = 0;
+            let distanceArr = [];
+            let sum = 0
+            for (let i = 0; i < lapData.length; i++) {
+                for (let j = 0; j < timeStampData.length; j++) {
+                    if (i === 0 && lapData[i] > timeStampData[j]) {
+                        start = 0
+                        end = distanceData[j]
+                        index = j
+                    }
+                    if (i !== 0 && lapData[i] > timeStampData[j] && timeStampData[j] > start) {
+                        end = distanceData[j]
+                        index = j
+                    }
                 }
-                if (i !== 0 && lapData[i] > timeStampData[j] && timeStampData[j] > start) {
-                    end = distanceData[j]
-                    index = j
+                let diff = end - start
+                if (this.state.unitPref === "Miles") {
+                    diff = this.convertToMiles(diff)
+                    diff = Math.round(diff * 100) / 100
+                    sum += diff
                 }
+                if (this.state.unitPref === "Kilometers") {
+                    diff = this.convertToKilometers(diff)
+                    diff = Math.round(diff * 100) / 100
+                    sum += diff
+                }
+                distanceArr.push(diff)
+                start = distanceData[index]
             }
-            let diff = end - start
-            if (this.state.unitPref === "Miles") {
-                diff = this.convertToMiles(diff)
-                diff = Math.round(diff * 100) / 100
-                sum += diff
-            }
-            if (this.state.unitPref === "Kilometers") {
-                diff = this.convertToKilometers(diff)
-                diff = Math.round(diff * 100) / 100
-                sum += diff
-            }
-            distanceArr.push(diff)
-            start = distanceData[index]
-        }
-        console.log("This is the distance array", distanceArr)
-        console.log("Total Distance ", sum)
+            console.log("This is the distance array", distanceArr)
+            console.log("Total Distance ", sum)
 
-        let duration = [];
-        if (this.state.durationPref === "Moving") {
-            console.log("Moving Duration")
-            duration = this.getLapMovingDuration()
+            let duration = [];
+            if (this.state.durationPref === "Moving") {
+                console.log("Moving Duration")
+                duration = this.getLapMovingDuration()
+            }
+            if (this.state.durationPref === "Elapsed") {
+                console.log("Elapsed Duration")
+                duration = this.getLapElapsedDuration(distanceArr)
+            }
+            this.getLapAvgPace()
+            this.setState({
+                durationArray: duration,
+                distanceArray: distanceArr
+            },
+                () => this.getLapAvgPace()
+            )
         }
-        if (this.state.durationPref === "Elapsed") {
-            console.log("Elapsed Duration")
-            duration = this.getLapElapsedDuration(distanceArr)
-        }
-        this.getLapAvgPace()
-        this.setState({
-            durationArray: duration,
-            distanceArray: distanceArr
-        },
-            () => this.getLapAvgPace()
-        )
-
     }
 
 
@@ -228,12 +232,12 @@ class LapsTable extends React.Component {
 
     convertToKilometers(distanceInMeters) {
         let kilometers = distanceInMeters / 1000;
-        kilometers = kilometers
+        kilometers = kilometers.toFixed(2)
         return kilometers
     }
     convertToMiles(distanceInMeters) {
         let miles = distanceInMeters / 1609;
-        miles = miles
+        miles = miles.toFixed(2)
         return miles
     }
     convertToHMS(time) {
@@ -259,15 +263,39 @@ class LapsTable extends React.Component {
         return seconds
     }
 
+    // getDistanceSplits() {
+    //     console.log("Getting distance Splits")
+    //     let lapData = this.state.runData.lap_timestamp_list;
+    //     let timeStampData = this.state.runData.timestamp_list;
+    //     let distanceData = this.state.runData.distance_list;
+    //     let lapDistanceIndex = [];
+    //     let durationArray = [];
+    //     let last = 0;
+    //     let count = (this.state.unitPref === "Kilometers" ? 1000 : 1609)
+    //     for (let i = 0; i < distanceData.length; i++) {
+    //         if (distanceData[i + 1] > count) {
+    //             lapDistanceIndex.push([i, distanceData[i]])
+    //             let dur = timeStampData[i] - timeStampData[last]
+    //             let hms = this.convertToHMS(dur)
+    //             durationArray.push(hms)
+    //             last = i
+    //             count = count + (this.state.unitPref === "Kilometers" ? 1000 : 1609)
+    //         }
+    //     }
+    //     console.log(durationArray)
+    //     console.log(lapDistanceIndex)
+    // }
+
+
     render() {
 
         return (
-            <Grid item xs={12} style={{ margin: "20px 0px" }}>
-                {this.state.loadTable === true ? 
-                    <Table 
-                    title="Laps Table"
-                    rowData={this.state.rowData}/>
-                : null
+            <Grid item xs={12} style={{ margin: "20px 0px", padding: "0px 50px" }}>
+                {this.state.loadTable === true ?
+                    <Table
+                        title="Laps Table"
+                        rowData={this.state.rowData} />
+                    : null
                 }
             </Grid>
         );

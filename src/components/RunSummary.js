@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, duration } from '@material-ui/core';
 import { activityApi, userToken } from '../api'
 import { withStyles } from '@material-ui/styles';
 import Cards from "./Card";
@@ -19,15 +19,14 @@ class Runsummary extends React.Component {
     super(props);
     this.state = {
       runData: this.props.runData,
-      runTitle: "",
-      durationPref: this.props.durationPref,
-      duration: "",
       unitPref: this.props.unitPref,
+      durationPref: this.props.durationPref,
+      runTitle: "",
+      duration: "",
       distance: "",
       avgPace: 0,
       avgPower: 0,
       dataLoaded: false,
-      lapTableViewPref: this.props.lapTableViewPref,
     }
   }
 
@@ -42,28 +41,23 @@ class Runsummary extends React.Component {
     })
       .then(resp => resp.json())
       .then((data) => {
-        // console.log(data)
-        this.findRunDuration(data.timestamp_list, data.total_power_list)
-        this.findRunDistance(data.distance_list[data.distance_list.length - 1])
+        console.log(data)
         this.setState({
           runData: data,
-          runTitle: data.name
-        },
-          () =>
-            this.setState({
-              dataLoaded: true
-            },
-              () => {
-                this.findAvgPace(data.speed_list)
-                this.findAvgPower(data.total_power_list)
-                this.passDataToParent(data)
-                console.log(this.state.runData)
-              },
-              () => this.setState({
-                dataLoaded: false
-              })
-            )
-        )
+        })
+        this.passDataToParent(data)
+        let duration = this.findRunDuration()
+        let distance = this.findRunDistance(data.distance_list[data.distance_list.length - 1])
+        let avgPace = this.findAvgPace(data.speed_list, duration, distance)
+        let avgPower = this.findAvgPower(data.total_power_list, duration)
+        this.setState({
+          runTitle: data.name,
+          duration: duration,
+          distance: distance,
+          avgPace: avgPace,
+          avgPower: avgPower,
+          dataLoaded: true
+        })
       })
   }
 
@@ -71,22 +65,22 @@ class Runsummary extends React.Component {
     this.setState({
       ...this.state, unitPref, durationPref
     },
-      () =>
-        this.setState({
-          dataLoaded: true
-        },
-          () => {
-            this.findRunDuration(this.state.runData.timestamp_list, this.state.runData.total_power_list)
-            this.findRunDistance(this.state.runData.distance_list[this.state.runData.distance_list.length - 1])
-            this.findAvgPace(this.state.runData.speed_list)
-            this.findAvgPower(this.state.runData.total_power_list)
-          }
+      () => {
+            let duration = (this.findRunDuration(this.state.runData.timestamp_list, this.state.runData.total_power_list))
+            let distance = (this.findRunDistance(this.state.runData.distance_list[this.state.runData.distance_list.length - 1]))
+            let avgPace = (this.findAvgPace(this.state.runData.speed_list, duration, distance))
+            let avgPower = (this.findAvgPower(this.state.runData.total_power_list, duration))
+            this.setState({
+              duration: duration,
+              distance: distance,
+              avgPace: avgPace,
+              avgPower: avgPower
+            })
+          },
         )
-    )
   }
 
-  findAvgPower(powerData) {
-    // console.log("FINDAVGPOWER")
+  findAvgPower(powerData, duration) {
     let powerSum = 0;
     let powerAvg;
     for (let i = 0; i < powerData.length; i++) {
@@ -94,13 +88,8 @@ class Runsummary extends React.Component {
         powerSum += powerData[1]
       }
     }
-    let seconds = this.getSeconds(this.state.duration)
+    let seconds = this.getSeconds(duration)
     powerAvg = (powerSum / seconds).toFixed(0)
-    // console.log("this is the calculated power Avg ", powerAvg)
-    this.setState({
-      avgPower: powerAvg
-    })
-    // console.log(powerAvg)
     return powerAvg
   }
 
@@ -110,11 +99,11 @@ class Runsummary extends React.Component {
     return seconds
   }
 
-  findAvgPace(speedData) {
+  findAvgPace(speedData, duration, distance) {
     // console.log("Finding the average pace =======")
     let speed;
-    let seconds = this.getSeconds(this.state.duration)
-    speed = ((seconds / 60) / this.state.distance)
+    let seconds = this.getSeconds(duration)
+    speed = ((seconds / 60) / distance)
     speed = speed.toFixed(2)
     let hms = this.convertToHMS(speed * 60)
     this.setState({
@@ -123,14 +112,10 @@ class Runsummary extends React.Component {
     return hms
   }
 
-  findRunDistance(distance) {
+  findRunDistance(meters) {
     // console.log("Distance in meters", distance)
-    if (this.state.unitPref === "Miles") {
-      return this.convertToMiles(distance)
-    }
-    else {
-      return this.convertToKilometers(distance)
-    }
+    let distance = (this.state.unitPref==="Miles"? this.convertToMiles(meters): this.convertToKilometers(meters))
+    return distance
   }
   convertToKilometers(distanceInMeters) {
     let kilometers = distanceInMeters / 1000;
@@ -151,19 +136,21 @@ class Runsummary extends React.Component {
     return miles
   }
 
-  findRunDuration(timestamp, powerList) {
+  findRunDuration() {
+    let timestamp = this.state.runData.timestamp_list
+    let powerList = this.state.runData.total_power_list
     let duration;
     let startTime = timestamp[0];
     let endTime = timestamp[timestamp.length - 1]
     let diff = endTime - startTime
     if (this.state.durationPref === "Elapsed") {
       duration = this.convertToHMS(diff)
-      // console.log("Elapsed Duration: ", duration)
+      console.log("Elapsed Duration: ", duration)
     }
     else {
       // Assuming that the user was not moving when they paused their recording
       let missingDataPoints = diff - timestamp.length;
-      // console.log(missingDataPoints)
+      console.log("This is the missing seconds" , missingDataPoints)
       let secondsNotMoving = 0;
       // Iterate through the powerList array, a power value of 0, indicates that the user was not moving.
       for (let i = 0; i < powerList.length; i++) {
@@ -175,11 +162,12 @@ class Runsummary extends React.Component {
       }
       diff += - missingDataPoints - secondsNotMoving
       duration = this.convertToHMS(diff)
-      // console.log("Moving Duration: ", duration)
+      console.log("Moving Duration: ", duration)
     }
     this.setState({
       duration: duration
     })
+    return duration
   }
   convertToHMS(time) {
     let hrs = ~~(time / 3600);
