@@ -5,17 +5,20 @@ import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import SettingsIcon from '@material-ui/icons/Settings';
 import TimerIcon from '@material-ui/icons/Timer';
 import BarChartIcon from '@material-ui/icons/BarChart';
+import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 
 
 const useStyles = makeStyles({
   root: {
     display: "block",
-    width: "380px",
+    maxWidth: "450px",
     border: "1px solid gainsboro",
     padding: "30px 10px",
     color: "white",
     backgroundColor: "#001a33",
-    justifyItems: "center"
+    justifyItems: "center",
+    margin: "auto",
+    marginTop: "20px", 
   },
   grid: {
     flexGrow: 1,
@@ -25,9 +28,12 @@ const useStyles = makeStyles({
     paddingTop: "10px",
     justify: "center",
   },
-  h2: {
-    margin: "auto",
-    padding: "10px 0px"
+  h1: {
+    display: "inline",
+    verticalAlign: "middle",
+  },
+  div: {
+    padding: "20px 0px"
   },
   p: {
     display: "inline",
@@ -71,6 +77,8 @@ const UserPreferences = props => {
   const [unitPref, setUnitPref] = useState("Kilometers");
   const [durationPref, setDurationPref] = useState("Elapsed");
   const [lapTableViewPref, setLapTableViewPref] = useState("Manual Splits");
+  const [peakPowerViewPref, setPeakPowerViewPref] = useState("Bar Chart");
+
 
 
   function handleChange(event) {
@@ -81,11 +89,13 @@ const UserPreferences = props => {
   }
 
   return (
-    <section className={classes.root}>
+    <Grid item className={classes.root} xs={10} sm={8} md={3} >
+      <div align="center" className={classes.div}>
+      <SettingsIcon className={classes.icon}/>
+        <h1 align="center" className={classes.h1}>
+        User Settings</h1>
+      </div>
       <Grid style={{margin: "auto"}} container className={classes.grid} spacing={2}>
-        <h2 align="center" className={classes.h2}>
-        <SettingsIcon className={classes.icon}/>
-        User Settings</h2>
         <Grid item xs={12}>
           <Grid container className={classes.grid2}>
             <Grid item xs={6} >
@@ -156,9 +166,32 @@ const UserPreferences = props => {
               </Grid>
           </Grid>
         </Grid>
+        <Grid item xs={12}>
+          <Grid container className={classes.grid2}>
+            <Grid item xs={7}>
+              <FilterHdrIcon className={classes.icon}/>
+            <p className={classes.p}> Peak Powers View</p>
+            </Grid>
+            <Grid item xs={4} align="center">
+            <select
+            className={classes.select}
+            classes={{ focused: classes.selectFocused}}
+            id={"lap-table-type-selector"}
+            onChange={event => {
+              setPeakPowerViewPref(event.target.value);
+              handleChange(event)
+            }}
+            value={peakPowerViewPref}
+          >
+            <option>Bar Chart</option>
+            <option>Line Chart</option>
+          </select>
+              </Grid>
+          </Grid>
+        </Grid>
 
-      </Grid>
-    </section>
+      </Grid>     
+    </Grid>
   );
 };
 

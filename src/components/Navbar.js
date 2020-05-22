@@ -83,16 +83,27 @@ export default function TemporaryDrawer() {
                                 <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
                                     {list(anchor)}
                                 </Drawer>
+                                <Button className={classes.button} >Settings</Button>
                             </React.Fragment>
                         ))}
                     </Grid>
                     <Grid align="center" item xs={4}>
                         <Typography variant="h5" className="gradient-text">STRYD</Typography>
                     </Grid>
-                    <Grid item align="right" xs={4}>
+                    <Grid item  xs={4} >
+                    <Grid container wrap="wrap" align="right">
+                    <Grid item xs={12} sm={6}>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
                         <Button className={classes.button}>Learn More</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={1}>
                         <Button className={classes.button}>Blog</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
                         <Button className={classes.button}>Contact</Button>
+                        </Grid>
+                    </Grid>
                     </Grid>
                 </Grid>
             </Toolbar>

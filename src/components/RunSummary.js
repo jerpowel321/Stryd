@@ -1,23 +1,33 @@
 import React from 'react';
-import {Grid, Hidden} from '@material-ui/core';
+import { Grid, duration } from '@material-ui/core';
 import { activityApi, userToken } from '../api'
+import { withStyles } from '@material-ui/styles';
+import Cards from "./Card";
+
+const styles = theme => ({
+  h1: {
+    color: "white",
+    backgroundColor: "#001a33",
+    padding: "10px 20px",
+    margin: "auto",
+    marginBottom: "10px"
+  },
+});
 
 class Runsummary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       runData: this.props.runData,
-      runTitle: "",
-      durationPref: this.props.durationPref,
-      duration: "",
       unitPref: this.props.unitPref,
+      durationPref: this.props.durationPref,
+      runTitle: "",
+      duration: "",
       distance: "",
       avgPace: 0,
       avgPower: 0,
       dataLoaded: false,
-      lapTableViewPref: this.props.lapTableViewPref,
     }
-    // this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -31,57 +41,46 @@ class Runsummary extends React.Component {
     })
       .then(resp => resp.json())
       .then((data) => {
-        // console.log(data)
-        this.findRunDuration(data.timestamp_list, data.total_power_list)
-        this.findRunDistance(data.distance_list[data.distance_list.length - 1])
+        console.log(data)
         this.setState({
           runData: data,
-          runTitle: data.name
-        },
-          () =>
-            this.setState({
-              dataLoaded: true
-            },
-              () => {
-                this.findAvgPace(data.speed_list)
-                this.findAvgPower(data.total_power_list)
-                this.passDataToParent(data)
-              },
-              () => this.setState({
-                dataLoaded: false
-              })
-            )
-        )
+        })
+        this.passDataToParent(data)
+        let duration = this.findRunDuration()
+        let distance = this.findRunDistance(data.distance_list[data.distance_list.length - 1])
+        let avgPace = this.findAvgPace(data.speed_list, duration, distance)
+        let avgPower = this.findAvgPower(data.total_power_list, duration)
+        this.setState({
+          runTitle: data.name,
+          duration: duration,
+          distance: distance,
+          avgPace: avgPace,
+          avgPower: avgPower,
+          dataLoaded: true
+        })
       })
   }
 
   componentWillReceiveProps({ unitPref, durationPref }) {
-    // console.log("UPDATING================================>")
-    // console.log(" Updating child Props")
-    // console.log({ unitPref })
-    // console.log({ durationPref })
-    // console.log(this.state.runData)
-
     this.setState({
       ...this.state, unitPref, durationPref
     },
-      () =>
-        this.setState({
-          dataLoaded: true
-        },
-          () => {
-            this.findRunDuration(this.state.runData.timestamp_list, this.state.runData.total_power_list)
-            this.findRunDistance(this.state.runData.distance_list[this.state.runData.distance_list.length - 1])
-            this.findAvgPace(this.state.runData.speed_list)
-            this.findAvgPower(this.state.runData.total_power_list)
-          }
+      () => {
+            let duration = (this.findRunDuration(this.state.runData.timestamp_list, this.state.runData.total_power_list))
+            let distance = (this.findRunDistance(this.state.runData.distance_list[this.state.runData.distance_list.length - 1]))
+            let avgPace = (this.findAvgPace(this.state.runData.speed_list, duration, distance))
+            let avgPower = (this.findAvgPower(this.state.runData.total_power_list, duration))
+            this.setState({
+              duration: duration,
+              distance: distance,
+              avgPace: avgPace,
+              avgPower: avgPower
+            })
+          },
         )
-    )
-
   }
 
-  findAvgPower(powerData) {
-    // console.log("FINDAVGPOWER")
+  findAvgPower(powerData, duration) {
     let powerSum = 0;
     let powerAvg;
     for (let i = 0; i < powerData.length; i++) {
@@ -89,13 +88,8 @@ class Runsummary extends React.Component {
         powerSum += powerData[1]
       }
     }
-    let seconds = this.getSeconds(this.state.duration)
+    let seconds = this.getSeconds(duration)
     powerAvg = (powerSum / seconds).toFixed(0)
-    // console.log("this is the calculated power Avg ", powerAvg)
-    this.setState({
-      avgPower: powerAvg
-    })
-    // console.log(powerAvg)
     return powerAvg
   }
 
@@ -105,34 +99,23 @@ class Runsummary extends React.Component {
     return seconds
   }
 
-  findAvgPace(speedData) {
+  findAvgPace(speedData, duration, distance) {
     // console.log("Finding the average pace =======")
     let speed;
-    let seconds = this.getSeconds(this.state.duration)
-    speed = ((seconds / 60) / this.state.distance)
+    let seconds = this.getSeconds(duration)
+    speed = ((seconds / 60) / distance)
     speed = speed.toFixed(2)
     let hms = this.convertToHMS(speed * 60)
-    // console.log("this is the duration", this.state.duration)
-    // console.log("this is the speed", speed);
-    // console.log("speed converted to hms ", this.convertToHMS(speed * 60))
-    // console.log("This is the seconds ", seconds);
-    // console.log("This is the distance ", this.state.distance)
-    // console.log("This is how many minutes per " + this.state.unitPref + " : " + speed + " " + this.state.durationPref)
-    // console.log("this is the average pace ", hms)
     this.setState({
       avgPace: hms
     })
     return hms
   }
 
-  findRunDistance(distance) {
+  findRunDistance(meters) {
     // console.log("Distance in meters", distance)
-    if (this.state.unitPref === "Miles") {
-      return this.convertToMiles(distance)
-    }
-    else {
-      return this.convertToKilometers(distance)
-    }
+    let distance = (this.state.unitPref==="Miles"? this.convertToMiles(meters): this.convertToKilometers(meters))
+    return distance
   }
   convertToKilometers(distanceInMeters) {
     let kilometers = distanceInMeters / 1000;
@@ -153,19 +136,21 @@ class Runsummary extends React.Component {
     return miles
   }
 
-  findRunDuration(timestamp, powerList) {
+  findRunDuration() {
+    let timestamp = this.state.runData.timestamp_list
+    let powerList = this.state.runData.total_power_list
     let duration;
     let startTime = timestamp[0];
     let endTime = timestamp[timestamp.length - 1]
     let diff = endTime - startTime
     if (this.state.durationPref === "Elapsed") {
       duration = this.convertToHMS(diff)
-      // console.log("Elapsed Duration: ", duration)
+      console.log("Elapsed Duration: ", duration)
     }
     else {
       // Assuming that the user was not moving when they paused their recording
       let missingDataPoints = diff - timestamp.length;
-      // console.log(missingDataPoints)
+      console.log("This is the missing seconds" , missingDataPoints)
       let secondsNotMoving = 0;
       // Iterate through the powerList array, a power value of 0, indicates that the user was not moving.
       for (let i = 0; i < powerList.length; i++) {
@@ -177,11 +162,12 @@ class Runsummary extends React.Component {
       }
       diff += - missingDataPoints - secondsNotMoving
       duration = this.convertToHMS(diff)
-      // console.log("Moving Duration: ", duration)
+      console.log("Moving Duration: ", duration)
     }
     this.setState({
       duration: duration
     })
+    return duration
   }
   convertToHMS(time) {
     let hrs = ~~(time / 3600);
@@ -204,74 +190,54 @@ class Runsummary extends React.Component {
 
   passDataToParent(runData) {
     // console.log("=======Child handle change")
-    // console.log("RAWRRR")
-    // console.log(runData)
     // Invoke the callback with the new value
     this.props.onChange(runData);
   }
 
 
   render() {
-
+    const { classes } = this.props;
     return (
       <div>
-        <div className="hero">      </div>
-
-          {this.state.dataLoaded === true ? <div>
-            <div className="container" >
-              <h1 align="center" style={{ color: "white", backgroundColor: "#001a33", padding: "10px 10px", margin:"auto" }}>{this.state.runTitle}</h1>
-              <Grid container alignContent="center" align="center" alignItems="stretch" justify="center" >
-                {/* <h1 >Run Summary</h1>*/}
-
-                <Grid item>
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "20px 20px 10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                    className="hvr-grow ">
-                    <div style={{ minHeight: "100px" }}>
-                      <img style={{ paddingTop: "20px" }} src="https://img.icons8.com/dusk/64/000000/clock.png" alt="Clock" />
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>{this.state.durationPref} Duration</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.duration} </p>
-                  </div>
-                </Grid>
-                <Grid item >
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                    className="hvr-grow">
-                    <div style={{ minHeight: "100px" }}>
-                      <img style={{ paddingTop: "20px" }} width="60px" src="https://img.icons8.com/color/96/000000/ruler.png" alt="Ruler" />
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>Distance</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.distance} {this.state.unitPref}</p>
-                  </div>
-                </Grid>
-                <Grid item >
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                  className="hvr-grow">
-                    <div style={{ minHeight: "100px" }}
-                      className="hvr-grow" >
-                      <img width="80px" style={{ paddingTop: "10px" }} src="https://img.icons8.com/plasticine/100/000000/running.png" alt="Runner" />
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>Average Pace</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.avgPace}</p>
-                  </div>
-                </Grid>
-                <Grid item >
-                  <div style={{ backgroundColor: "#001a33", padding: "10px 10px", margin: "10px 20px", width: "180px", borderRadius: "10px", boxShadow: "0px 3px 15px rgba(0,0,0,0.2)", minHeight: "180px" }}
-                    className="hvr-grow">
-                    <div style={{ minHeight: "100px" }}>
-                      <img width="60px" style={{ paddingTop: "20px" }} src="https://img.icons8.com/officel/80/000000/reflector-bulb.png" alt="Light Bulb"/>
-                    </div>
-                    <h3 style={{ fontFamily: "'Lato', sans-serif", margin: "2px", fontSize: "22px", color: "white" }}>Average Power</h3>
-                    <p style={{ fontFamily: "'Roboto Slab', serif", fontSize: "18px", margin: "10px", color: "white" }}>{this.state.avgPower} Watts (W)</p>
-                  </div>
-
-                </Grid>
-              </Grid>
-            </div>
+        <div className="hero"> </div>
+        {this.state.dataLoaded === true ? <div>
+          <div className="container" >
+            <h1 align="center" className={classes.h1}>{this.state.runTitle}</h1>
+            <Grid container alignContent="center" align="center" alignItems="stretch" justify="center" >
+              <Cards
+                title={`${this.state.durationPref} Duration`}
+                p={this.state.duration}
+                src="https://img.icons8.com/dusk/64/000000/clock.png"
+                alt="Clock"
+              />
+              <Cards
+                title="Distance"
+                p={`${this.state.distance} ${this.state.unitPref}`}
+                src="https://img.icons8.com/color/96/000000/ruler.png"
+                alt="Ruler"
+                imgWidth="60px"
+              />
+              <Cards
+                title="Average Pace"
+                p={this.state.avgPace}
+                src="https://img.icons8.com/plasticine/100/000000/running.png"
+                alt="Runner"
+                imgWidth="80px"
+              />
+              <Cards
+                title="Average Power"
+                p={`${this.state.avgPower} Watts (W)`}
+                src="https://img.icons8.com/officel/80/000000/reflector-bulb.png"
+                alt="Light Bulb"
+                imgWidth="60px"
+              />
+            </Grid>
           </div>
-            :
-            null
-          }
-  
+        </div>
+          :
+          null
+        }
+
       </div>
     );
   }
@@ -279,5 +245,4 @@ class Runsummary extends React.Component {
 
 
 
-
-export default Runsummary;
+export default withStyles(styles)(Runsummary);
