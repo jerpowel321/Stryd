@@ -84,7 +84,7 @@ class PeakPowers extends React.Component {
         return (
             <Grid container >
                 <Grid item xs={12} style={{ margin: "auto", maxWidth: "90%", }}>
-                    <div style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", backgroundColor: "white",padding: "40px"}}>
+                    <div style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", backgroundColor: "white", padding: "40px"}}>
                         {this.state.peakPowers !== undefined && this.state.peakPowerViewPref === "Bar Chart" ?
                             <Barchart
                                 title={this.state.runData.name}

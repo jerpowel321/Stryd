@@ -263,28 +263,28 @@ class LapsTable extends React.Component {
         return seconds
     }
 
-    // getDistanceSplits() {
-    //     console.log("Getting distance Splits")
-    //     let lapData = this.state.runData.lap_timestamp_list;
-    //     let timeStampData = this.state.runData.timestamp_list;
-    //     let distanceData = this.state.runData.distance_list;
-    //     let lapDistanceIndex = [];
-    //     let durationArray = [];
-    //     let last = 0;
-    //     let count = (this.state.unitPref === "Kilometers" ? 1000 : 1609)
-    //     for (let i = 0; i < distanceData.length; i++) {
-    //         if (distanceData[i + 1] > count) {
-    //             lapDistanceIndex.push([i, distanceData[i]])
-    //             let dur = timeStampData[i] - timeStampData[last]
-    //             let hms = this.convertToHMS(dur)
-    //             durationArray.push(hms)
-    //             last = i
-    //             count = count + (this.state.unitPref === "Kilometers" ? 1000 : 1609)
-    //         }
-    //     }
-    //     console.log(durationArray)
-    //     console.log(lapDistanceIndex)
-    // }
+    getDistanceSplits() {
+        console.log("Getting distance Splits")
+        let lapData = this.state.runData.lap_timestamp_list;
+        let timeStampData = this.state.runData.timestamp_list;
+        let distanceData = this.state.runData.distance_list;
+        let lapDistanceIndex = [];
+        let durationArray = [];
+        let last = 0;
+        let count = (this.state.unitPref === "Kilometers" ? 1000 : 1609)
+        for (let i = 0; i < distanceData.length; i++) {
+            if (distanceData[i + 1] > count) {
+                lapDistanceIndex.push([i, distanceData[i]])
+                let dur = timeStampData[i] - timeStampData[last]
+                let hms = this.convertToHMS(dur)
+                durationArray.push(hms)
+                last = i
+                count = count + (this.state.unitPref === "Kilometers" ? 1000 : 1609)
+            }
+        }
+        console.log(durationArray)
+        console.log(lapDistanceIndex)
+    }
 
 
     render() {
