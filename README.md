@@ -1,5 +1,10 @@
 # Stryd Web Internship Challenge
 
+## Dashboard
+
+![dashboard](public/images/dashboard.png)
+
+
 ## Introduction
 
 Hello from the Stryd team!

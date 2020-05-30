@@ -7,7 +7,8 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = theme => ({
  root: {
-     padding: "0px 20px 20px 20px" 
+     padding: "0px 20px 20px 20px",
+     background: "#001a33"
     },
     h1: {
         color: "white", 
