@@ -75,8 +75,6 @@ class LapsTable extends React.Component {
                 distanceArr.push(diff)
                 start = distanceData[index]
             }
-            console.log("This is the distance array", distanceArr)
-            console.log("Total Distance ", sum)
 
             let duration = [];
             if (this.state.durationPref === "Moving") {
