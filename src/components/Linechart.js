@@ -1,6 +1,23 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import { withStyles } from '@material-ui/styles';
 
+const styles = theme => ({
+  h3: {
+    textAlign: "center", 
+    display: "inline", 
+    verticalAlign: "middle"
+  },
+  div: { 
+    textAlign: "center", 
+    padding: "10px 0px 20px 0px" 
+  },
+  img: {
+    paddingRight: "5px", 
+    verticalAlign: "middle"
+  },
+
+});
 
 class LineChart extends React.Component {
 
@@ -68,11 +85,12 @@ class LineChart extends React.Component {
 
     }
         render() {
+            const { classes } = this.props;
             return (
                 <div >
-                    <div style={{ textAlign: "center", padding: "10px 0px 20px 0px" }}>
-                        <img style={{ paddingRight: "5px", verticalAlign: "middle" }} width="30px" src="https://img.icons8.com/cotton/64/000000/mountain.png" alt="Mountains" />
-                        <h3 style={{ textAlign: "center", display: "inline", verticalAlign: "middle" }}>{this.props.title} Peak Powers</h3>
+                    <div classes={classes.div}>
+                        <img classes={classes.img} width="30px" src="https://img.icons8.com/cotton/64/000000/mountain.png" alt="Mountains" />
+                        <h3 classes={classes.h3}>{this.props.title} Peak Powers</h3>
                     </div>
                     <Line data={this.data} options={this.options}/>
                 </div>
@@ -80,4 +98,4 @@ class LineChart extends React.Component {
         }
     };
 
-    export default LineChart
+    export default withStyles(styles)(LineChart);
