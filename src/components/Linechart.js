@@ -61,7 +61,6 @@ class LineChart extends React.Component {
                     min: 0,
                     max: 10,
                     fontSize: 16
-                    // display: false
                 },
                 scaleLabel: {
                     display: true,
